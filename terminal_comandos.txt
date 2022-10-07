@@ -1,0 +1,8 @@
+npx create-react-app ninerogues --template cra-template-pwa //donde dice "ninerogues" colocar el nombre de l proyecto
+npm install -D tailwindcss
+npx tailwindcss init
+npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch
+npm install redux redux-devtools-extension react-redux redux-thunk
+npm install react-toastify
+npm install react-router-dom
+npm i @headlessui/react @heroicons/react
