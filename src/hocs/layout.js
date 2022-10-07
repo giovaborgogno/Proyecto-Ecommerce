@@ -1,12 +1,11 @@
-// import React from 'react'
-// import ReactDOM from 'react-dom'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { check_authenticated, load_user, refresh, } from '../redux/actions/auth';
+import { check_authenticated, load_user, refresh } from '../redux/actions/auth';
+
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import Navbar from '../components/navigation/navbar'
-import Footer from '../components/navigation/footer'
+import Navbar from '../components/navigation/navbar';
+import Footer from '../components/navigation/footer';
 
 const Layout = (props) => {
 
@@ -16,18 +15,19 @@ const Layout = (props) => {
         props.load_user()
     }, []);
 
-    return (
+    return(
         <div>
-            <Navbar />
+            <Navbar/>
             <ToastContainer autoClose={5000} />
             {props.children}
-            <Footer />
+            <Footer/>
         </div>
     )
 }
+
 
 export default connect(null, {
     check_authenticated,
     load_user,
     refresh
-})(Layout)
+}) (Layout)
