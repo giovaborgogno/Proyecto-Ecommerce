@@ -4,6 +4,8 @@ import { Link, Navigate } from 'react-router-dom'
 import Alert from '../../components/alert'
 import { connect } from 'react-redux'
 import {logout} from '../../redux/actions/auth'
+import { get_categories } from '../../redux/actions/categories'
+import { get_search_products } from '../../redux/actions/products';
 
 import {
   BookmarkAltIcon,
@@ -92,6 +94,9 @@ function Navbar({
   isAuthenticated,
   user,
   logout,
+  get_categories,
+  categories,
+  get_search_products,
 }) {
 
   const [redirect, setRedirect] = useState(false);
@@ -301,9 +306,12 @@ function Navbar({
                     </>
                   )}
                 </Popover>
-                <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                <Link to="/shop" className="text-base font-medium text-gray-500 hover:text-gray-900':'mt-2 text-base font-medium text-gray-500 hover:text-gray-900">
+                Shop
+              </Link>
+                {/* <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
                   Store
-                </a>
+                </a> */}
                 <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
                   Docs
                 </a>
@@ -526,10 +534,14 @@ function Navbar({
 
 const mapStateToProps = state => ({
   isAuthenticated: state.Auth.isAuthenticated,
-  user: state.Auth.user
+  user: state.Auth.user,
+  categories: state.Categories.categories,
 
 })
 
 export default connect(mapStateToProps, {
   logout,
+  get_categories,
+  get_search_products
+  
 })(Navbar)

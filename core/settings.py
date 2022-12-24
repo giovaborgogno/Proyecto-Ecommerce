@@ -33,6 +33,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+DOMAIN = os.environ.get('DOMAIN')
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -48,7 +50,7 @@ DJANGO_APPS = [
 ]
 
 PROJET_APPS = ['apps.user']
-ECOMMERCE_APPS = []
+ECOMMERCE_APPS = ['apps.category','apps.product']
 THIRD_PARTY_APPS = [
     'corsheaders',
     'rest_framework',
