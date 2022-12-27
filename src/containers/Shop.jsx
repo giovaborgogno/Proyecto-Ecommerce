@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { get_categories } from '../redux/actions/categories'
 import { get_products, get_filtered_products } from '../redux/actions/products'
-// import ProductCard from '../components/product/ProductCard'
-// import { prices } from '../helpers/fixedPrices'
+import ProductCard from '../components/product/ProductCard'
+import { prices } from '../helpers/fixedPrices'
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
   { name: 'Best Rating', href: '#', current: false },
@@ -116,7 +116,7 @@ const Shop = ({
       filtered_products.map((product, index) => {
         return display.push(
           <div key={index}>
-            {/* <ProductCard product={product}/> */}
+            <ProductCard product={product} />
           </div>
         );
       });
@@ -129,7 +129,7 @@ const Shop = ({
       products.map((product, index) => {
         return display.push(
           <div key={index}>
-            {/* <ProductCard product={product}/> */}
+            <ProductCard product={product} />
           </div>
         );
       });
@@ -272,38 +272,38 @@ const Shop = ({
                             </Disclosure.Button>
                             <Disclosure.Panel className="pt-6">
                               <div className="space-y-6">
-                                {/* {
-                              prices && prices.map((price, index) => {
-                                  if (price.id === 0) {
+                                {
+                                  prices && prices.map((price, index) => {
+                                    if (price.id === 0) {
                                       return (
-                                          <div key={index} className='form-check'>
-                                              <input
-                                                  onChange={e => onChange(e)}
-                                                  value={price.name}
-                                                  name='price_range'
-                                                  type='radio'
-                                                  className='focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full'
-                                                  defaultChecked
-                                              />
-                                              <label className='ml-3 min-w-0 flex-1 text-gray-500 font-sofiapro-light'>{price.name}</label>
-                                          </div>
+                                        <div key={index} className='form-check'>
+                                          <input
+                                            onChange={e => onChange(e)}
+                                            value={price.name}
+                                            name='price_range'
+                                            type='radio'
+                                            className='focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full'
+                                            defaultChecked
+                                          />
+                                          <label className='ml-3 min-w-0 flex-1 text-gray-500 font-sofiapro-light'>{price.name}</label>
+                                        </div>
                                       )
-                                  } else {
+                                    } else {
                                       return (
-                                          <div key={index} className='form-check'>
-                                              <input
-                                                  onChange={e => onChange(e)}
-                                                  value={price.name}
-                                                  name='price_range'
-                                                  type='radio'
-                                                  className='focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full'
-                                              />
-                                              <label className='ml-3 min-w-0 flex-1 text-gray-500 font-sofiapro-light'>{price.name}</label>
-                                          </div>
+                                        <div key={index} className='form-check'>
+                                          <input
+                                            onChange={e => onChange(e)}
+                                            value={price.name}
+                                            name='price_range'
+                                            type='radio'
+                                            className='focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full'
+                                          />
+                                          <label className='ml-3 min-w-0 flex-1 text-gray-500 font-sofiapro-light'>{price.name}</label>
+                                        </div>
                                       )
-                                  }
-                              })
-                          } */}
+                                    }
+                                  })
+                                }
                               </div>
                             </Disclosure.Panel>
 
@@ -478,38 +478,38 @@ const Shop = ({
                           </Disclosure.Button>
                           <Disclosure.Panel className="pt-6">
                             <div className="space-y-6">
-                              {/* {
-                              prices && prices.map((price, index) => {
+                              {
+                                prices && prices.map((price, index) => {
                                   if (price.id === 0) {
-                                      return (
-                                          <div key={index} className='form-check'>
-                                              <input
-                                                  onChange={e => onChange(e)}
-                                                  value={price.name}
-                                                  name='price_range'
-                                                  type='radio'
-                                                  className='focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full'
-                                                  defaultChecked
-                                              />
-                                              <label className='ml-3 min-w-0 flex-1 text-gray-500 font-sofiapro-light'>{price.name}</label>
-                                          </div>
-                                      )
+                                    return (
+                                      <div key={index} className='form-check'>
+                                        <input
+                                          onChange={e => onChange(e)}
+                                          value={price.name}
+                                          name='price_range'
+                                          type='radio'
+                                          className='focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full'
+                                          defaultChecked
+                                        />
+                                        <label className='ml-3 min-w-0 flex-1 text-gray-500 font-sofiapro-light'>{price.name}</label>
+                                      </div>
+                                    )
                                   } else {
-                                      return (
-                                          <div key={index} className='form-check'>
-                                              <input
-                                                  onChange={e => onChange(e)}
-                                                  value={price.name}
-                                                  name='price_range'
-                                                  type='radio'
-                                                  className='focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full'
-                                              />
-                                              <label className='ml-3 min-w-0 flex-1 text-gray-500 font-sofiapro-light'>{price.name}</label>
-                                          </div>
-                                      )
+                                    return (
+                                      <div key={index} className='form-check'>
+                                        <input
+                                          onChange={e => onChange(e)}
+                                          value={price.name}
+                                          name='price_range'
+                                          type='radio'
+                                          className='focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full'
+                                        />
+                                        <label className='ml-3 min-w-0 flex-1 text-gray-500 font-sofiapro-light'>{price.name}</label>
+                                      </div>
+                                    )
                                   }
-                              })
-                          } */}
+                                })
+                              }
                             </div>
                           </Disclosure.Panel>
 
