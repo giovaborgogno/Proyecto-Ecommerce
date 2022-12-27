@@ -1,77 +1,32 @@
-import Layout from '../hocs/layout'
+import Layout from '../../hocs/layout'
 import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { get_categories } from '../redux/actions/categories'
-import { get_products, get_filtered_products } from '../redux/actions/products'
-import ProductCard from '../components/product/ProductCard'
-import { prices } from '../helpers/fixedPrices'
-const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
-]
-const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
-]
-const filters = [
-  {
-    id: 'color',
-    name: 'Color',
-    options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
-    ],
-  },
-  {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
-    ],
-  },
-]
+import { get_categories } from '../../redux/actions/categories'
+import { get_products, get_filtered_products } from '../../redux/actions/products'
+import ProductCard from '../../components/product/ProductCard'
+import { prices } from '../../helpers/fixedPrices'
+import { get_search_products } from '../../redux/actions/products'
+import Footer from '../../components/navigation/footer'
+import Navbar  from '../../components/navigation/navbar'
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Shop = ({
+const Search = ({
   get_categories,
   categories,
   get_products,
   products,
   get_filtered_products,
-  filtered_products
+  filtered_products,
+  get_search_products,
+  search_products,
 }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [filtered, setFiltered] = useState(false)
@@ -90,9 +45,10 @@ const Shop = ({
   } = formData
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     get_categories()
     get_products()
-    window.scrollTo(0, 0)
+    // get_search_products()
   }, [])
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -108,6 +64,18 @@ const Shop = ({
     let display = []
 
     if (
+      search_products &&
+      search_products !== null &&
+      search_products !== undefined
+    ) {
+      search_products.map((product, index) => {
+        return display.push(
+          <div key={index}>
+            <ProductCard product={product} />
+          </div>
+        );
+      });
+    } else if (
       filtered_products &&
       filtered_products !== null &&
       filtered_products !== undefined &&
@@ -153,6 +121,7 @@ const Shop = ({
 
   return (
     <Layout>
+        
       <div className="bg-white">
         <div>
           {/* Mobile filter dialog */}
@@ -384,7 +353,7 @@ const Shop = ({
 
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200">
-              <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Shop</h1>
+              <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Buscaste</h1>
 
               <div className="flex items-center">
                 <button
@@ -607,11 +576,14 @@ const Shop = ({
 const mapStateToProps = state => ({
   categories: state.Categories.categories,
   products: state.Products.products,
-  filtered_products: state.Products.filtered_products
+  filtered_products: state.Products.filtered_products,
+  search_products: state.Products.search_products,
 })
 
 export default connect(mapStateToProps, {
   get_categories,
   get_products,
-  get_filtered_products
-})(Shop)
+  get_filtered_products,
+  get_search_products,
+  
+})(Search)
