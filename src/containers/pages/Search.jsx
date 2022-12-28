@@ -63,12 +63,13 @@ const Search = ({
     let results = []
     let display = []
 
-    if (
-      search_products &&
-      search_products !== null &&
-      search_products !== undefined
+     if (
+      filtered_products &&
+      filtered_products !== null &&
+      filtered_products !== undefined &&
+      filtered
     ) {
-      search_products.map((product, index) => {
+      filtered_products.map((product, index) => {
         return display.push(
           <div key={index}>
             <ProductCard product={product} />
@@ -76,12 +77,11 @@ const Search = ({
         );
       });
     } else if (
-      filtered_products &&
-      filtered_products !== null &&
-      filtered_products !== undefined &&
-      filtered
+      search_products &&
+      search_products !== null &&
+      search_products !== undefined
     ) {
-      filtered_products.map((product, index) => {
+      search_products.map((product, index) => {
         return display.push(
           <div key={index}>
             <ProductCard product={product} />

@@ -101,9 +101,9 @@ function Navbar({
   get_search_products,
 }) {
 
-  useEffect(()=>{
+  useEffect(() => {
     get_categories()
-  },[])
+  }, [])
 
   const [redirect, setRedirect] = useState(false);
 
@@ -112,9 +112,9 @@ function Navbar({
     category_id: 0,
     search: ''
   });
-  const {category_id, search} = formData;
+  const { category_id, search } = formData;
 
-  const onChange = e => setFormData({...formData, [e.target.name]: e.target.value});
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = e => {
     e.preventDefault();
@@ -122,10 +122,11 @@ function Navbar({
     setRender(!render);
   }
 
- 
 
-  if(render)
-    return <Navigate to="/search"/>;
+
+  if (render && window.location.pathname !== '/search')
+    return <Navigate to="/search" />;
+
 
   if (redirect)
     return <Navigate to="/login" />;
@@ -248,7 +249,7 @@ function Navbar({
                   alt=""
                 />
               </Link>
-              
+
             </div>
             <div className="-mr-2 -my-2 md:hidden">
               <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -258,7 +259,7 @@ function Navbar({
             </div>
             <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
               <Popover.Group as="nav" className="flex space-x-10">
-                
+
                 <Link to="/shop" className=" mt-2 text-base font-medium text-gray-500 hover:text-gray-900':'mt-2 text-base font-medium text-gray-500 hover:text-gray-900">
                   Shop
                 </Link>
@@ -266,14 +267,14 @@ function Navbar({
                   Store
                 </a> */}
 
-                <SearchBox 
-                search={search}
-                onChange={onChange}
-                onSubmit={onSubmit}
-                categories={categories}
+                <SearchBox
+                  search={search}
+                  onChange={onChange}
+                  onSubmit={onSubmit}
+                  categories={categories}
                 />
 
-                
+
               </Popover.Group>
               <div className="flex items-center md:ml-12">
                 {
@@ -307,7 +308,7 @@ function Navbar({
                       alt="Workflow"
                     />
                   </div>
-                  
+
                   <div className="-mr-2">
                     <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                       <span className="sr-only">Close menu</span>
