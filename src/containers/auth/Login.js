@@ -2,12 +2,13 @@ import Layout from '../../hocs/layout'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {connect} from 'react-redux'
-import { login } from '../../redux/actions/auth'
+import { login, refresh } from '../../redux/actions/auth'
 import {Oval} from 'react-loader-spinner'
 import { Navigate } from 'react-router'
 const Login = ({
   login,
-  loading
+  loading,
+  refresh
 }) => {
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const Login = ({
   const onSubmit = e =>{
     e.preventDefault();
     login(email, password);
+    refresh();
     setActivated(true);
   }
 
@@ -141,5 +143,6 @@ const mapStateToProps = state => ({
 })
 
 export default connect(mapStateToProps, {
-  login
+  login,
+  refresh,
 }) (Login)
