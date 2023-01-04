@@ -162,15 +162,15 @@ function Navbar({
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
+                <Link
+                  to="/dashboard"
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'block px-4 py-2 text-sm'
                   )}
                 >
-                  Account settings
-                </a>
+                  Dashboard
+                </Link>
               )}
             </Menu.Item>
             <Menu.Item>
@@ -378,7 +378,18 @@ function Navbar({
                   </a>
                 </div>
                 <div className="mt-6">
-                  <Link
+                  {isAuthenticated!==null && isAuthenticated !==undefined && isAuthenticated ?
+                <>
+                <Link
+                    to="/dashboard"
+                    className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                  >
+                    Dashboard
+                  </Link>
+                </>
+                :  
+                <>
+                <Link
                     to="/signup"
                     className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
                   >
@@ -390,6 +401,9 @@ function Navbar({
                       Sign in
                     </Link>
                   </p>
+                </>
+                }
+                  
                 </div>
               </div>
             </div>
