@@ -5,6 +5,7 @@ import Categories from './categories';
 import Products from './products';
 import Cart from './cart';
 import Shipping from './shipping';
+import Payment from './payment';
 
 export default combineReducers({
     Auth,
@@ -13,4 +14,5 @@ export default combineReducers({
     Products,
     Cart,
     Shipping,
+    Payment,
 })

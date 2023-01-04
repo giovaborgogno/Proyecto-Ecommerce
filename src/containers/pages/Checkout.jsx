@@ -12,24 +12,45 @@ import {
 } from '../../redux/actions/cart'
 import {get_shipping_options} from '../../redux/actions/shipping'
 import CartItem from "../../components/cart/CartItem";
-import { QuestionMarkCircleIcon } from '@heroicons/react/solid'
 import { Link } from "react-router-dom";
 import { setAlert } from "../../redux/actions/alert";
 import ShippingForm from '../../components/checkout/ShippingForm';
 
+  import {
+    get_payment_total,
+    get_client_token,
+    process_payment
+  } from '../../redux/actions/payment';
+  
+  import DropIn from 'braintree-web-drop-in-react';
+  import { Oval } from 'react-loader-spinner'
+  import {countries} from '../../helpers/fixedCountries'
+  
+
 const Checkout = ({
     isAuthenticated,
+    user,
+    items,
+    total_items,
+    shipping,
+    clientToken,
+    made_payment,
+    loading,
+    original_price,
+    total_amount,
+    total_compare_amount,
+    estimated_tax,
+    shipping_cost,
+    update_item,
+    remove_item,
+    setAlert,
+    get_shipping_options,
+    get_payment_total,
+    get_client_token,
+    process_payment,
     get_items,
     get_total,
     get_item_total,
-    update_item,
-    remove_item,
-    items,
-    amount,
-    compare_amount,
-    get_shipping_options,
-    shipping,
-    setAlert,
 }) => {
 
     const [formData, setFormData] = useState({
@@ -64,13 +85,61 @@ const Checkout = ({
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    const buy = async e => {
+        e.preventDefault();
+        let nonce = await data.instance.requestPaymentMethod();
+        if (shipping_id && shipping_id !== null && shipping_id !== undefined) {
+          process_payment(
+              nonce,
+              shipping_id,
+              full_name,
+              address_line_1,
+              address_line_2,
+              city,
+              state_province_region,
+              postal_zip_code,
+              country_region,
+              telephone_number
+          );
+        } else {
+          process_payment(
+              nonce,
+              shipping_id,
+              full_name,
+              address_line_1,
+              address_line_2,
+              city,
+              state_province_region,
+              postal_zip_code,
+              country_region,
+              telephone_number
+          );
+      }
+    }
 
     const [render, setRender] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0)
         get_shipping_options();
+        if(isAuthenticated !== null && isAuthenticated !== undefined && isAuthenticated){
+            get_client_token();
+            
+        }
     }, [])
+
+    useEffect(()=>{
+        get_items()
+        get_total()
+        get_item_total()
+    },[])
+    
+    useEffect(() => {
+    //   if (coupon && coupon !== null && coupon !== undefined)
+    //       get_payment_total(shipping_id);
+    //   else
+          get_payment_total(shipping_id);
+    }, [shipping_id, items]);
 
     if (isAuthenticated !== null && isAuthenticated !== undefined && !isAuthenticated)
         return <Navigate to='/' />
@@ -129,6 +198,65 @@ const Checkout = ({
         }
     };
 
+    const renderPaymentInfo = () => {
+        if (!clientToken) {
+          if (!isAuthenticated) {
+              <Link
+                to="/login"
+                className="w-full bg-gray-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
+              >
+                Login
+              </Link>
+          } else {
+            <button
+              className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+            >
+              <Oval
+                    type="Oval"
+                    color="#fff"
+                    width={20}
+                    height={20}
+              />
+            </button>
+          }
+        } else {
+          return (
+            <>
+              <DropIn
+                options={{
+                    authorization: clientToken,
+                    paypal: {
+                        flow: 'vault'
+                    }
+                }}
+                onInstance={instance => (data.instance = instance)}
+              />
+              <div className="mt-6">
+                {loading?<button
+                  className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+                >
+                  <Oval
+                        type="Oval"
+                        color="#fff"
+                        width={20}
+                        height={20}
+                  />
+                </button>:
+                <button
+                type="submit"
+                className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+              >
+                Place Order
+              </button>}
+              </div>
+            </>
+          )
+        }
+      }
+  
+      if (made_payment)
+          return <Navigate to='/thankyou' />;
+
     return (
         <Layout>
             <div className="bg-white">
@@ -147,6 +275,7 @@ const Checkout = ({
 
                         {/* Order summary */}
                         <ShippingForm
+                            original_price={original_price}
                             full_name={full_name}
                             address_line_1={address_line_1}
                             address_line_2={address_line_2}
@@ -154,19 +283,19 @@ const Checkout = ({
                             state_province_region={state_province_region}
                             postal_zip_code={postal_zip_code}
                             telephone_number={telephone_number}
-                            // countries={countries}
+                            countries={countries}
                             onChange={onChange}
-                            // buy={buy}
-                            // user={user}
+                            buy={buy}
+                            user={user}
                             renderShipping={renderShipping}
-                            // total_amount={total_amount}
+                            total_amount={total_amount}
                             // total_after_coupon={total_after_coupon}
-                            // total_compare_amount={total_compare_amount}
-                            // estimated_tax={estimated_tax}
-                            // shipping_cost={shipping_cost}
+                            total_compare_amount={total_compare_amount}
+                            estimated_tax={estimated_tax}
+                            shipping_cost={shipping_cost}
                             shipping_id={shipping_id}
                             shipping={shipping}
-                            // renderPaymentInfo={renderPaymentInfo}
+                            renderPaymentInfo={renderPaymentInfo}
                             // coupon={coupon}
                             // apply_coupon={apply_coupon}
                             coupon_name={coupon_name}
@@ -182,17 +311,31 @@ const Checkout = ({
 }
 const mapStateToProps = state => ({
     isAuthenticated: state.Auth.isAuthenticated,
+    user: state.Auth.user,
     items: state.Cart.items,
-    amount: state.Cart.amount,
-    compare_amount: state.Cart.compare_amount,
+    total_items: state.Cart.total_items,
     shipping: state.Shipping.shipping,
+    clientToken: state.Payment.clientToken,
+    made_payment: state.Payment.made_payment,
+    loading: state.Payment.loading,
+    original_price: state.Payment.original_price,
+    // total_after_coupon: state.Payment.total_after_coupon,
+    total_amount: state.Payment.total_amount,
+    total_compare_amount: state.Payment.total_compare_amount,
+    estimated_tax: state.Payment.estimated_tax,
+    shipping_cost: state.Payment.shipping_cost,
+    // coupon: state.Coupons.coupon,
 })
 export default connect(mapStateToProps, {
-    get_items,
-    get_total,
-    get_item_total,
+
     update_item,
     remove_item,
     setAlert,
     get_shipping_options,
+    get_payment_total,
+    get_client_token,
+    process_payment,
+    get_items,
+    get_total,
+    get_item_total,
 })(Checkout);

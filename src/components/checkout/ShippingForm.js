@@ -1,7 +1,8 @@
-import { QuestionMarkCircleIcon, SortAscendingIcon, UsersIcon } from '@heroicons/react/solid'
+import { QuestionMarkCircleIcon} from '@heroicons/react/solid'
 import { TicketIcon } from '@heroicons/react/outline'
 import { Fragment } from 'react'
 const ShippingForm = ({
+    original_price,
     full_name,
     address_line_1,
     address_line_2,
@@ -9,18 +10,18 @@ const ShippingForm = ({
     state_province_region,
     postal_zip_code,
     telephone_number,
-    countries = null,
+    countries,
     onChange,
-    // buy,
-    // user,
+    buy,
+    user,
     renderShipping,
-    total_amount = 0.00,
-    total_compare_amount = 0.00,
-    estimated_tax = 0.00,
+    total_amount,
+    total_compare_amount,
+    estimated_tax,
     shipping_cost,
     shipping_id,
     shipping,
-    // renderPaymentInfo,
+    renderPaymentInfo,
     // apply_coupon,
     coupon = null,
     // coupon_name,
@@ -113,6 +114,12 @@ const ShippingForm = ({
                 </dt>
                 <dd className="text-sm font-medium text-gray-900">${total_compare_amount}</dd>
               </div>
+              <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                <dt className="flex text-sm text-gray-600">
+                  <span>Discount</span>
+                </dt>
+                <dd className="text-sm font-medium text-gray-900">${(total_compare_amount-original_price).toFixed(2)}</dd>
+              </div>
 
               {
                   coupon && 
@@ -141,8 +148,8 @@ const ShippingForm = ({
 
             </dl>
 
-            <form >
-            {/* <form onSubmit={e => buy(e)}> */}
+            {/* <form > */}
+            <form onSubmit={e => buy(e)}>
                 <div className=" px-4 py-5  mt-4 sm:px-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900">Shipping Address:</h3>
                 </div>
@@ -156,7 +163,12 @@ const ShippingForm = ({
                         <input
                             type='text'
                             name='full_name'
-                            // placeholder={`${user.first_name} ${user.last_name}`}
+                            {...user !== null && user !== undefined &&
+                                <>
+                            placeholder={`${user.first_name} ${user.last_name}`}
+                            </>
+                            
+                            }
                             onChange={e => onChange(e)}
                             value={full_name}
                             required
@@ -308,7 +320,7 @@ const ShippingForm = ({
                 </div>
 
                 
-            {/* {renderPaymentInfo()} */}
+            {renderPaymentInfo()}
 
             </form>
           </section>
