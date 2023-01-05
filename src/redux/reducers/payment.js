@@ -15,7 +15,7 @@ const initialState = {
     clientToken: null,
     made_payment: false,
     original_price: 0.0,
-    
+    total_after_coupon: 0.0,
     total_amount: 0.0,
     total_compare_amount: 0.0,
     estimated_tax: 0.0,
@@ -31,7 +31,7 @@ export default function Payment(state = initialState, action) {
             return {
                 ...state,
                 original_price: payload.original_price,
-                
+                total_after_coupon: payload.total_after_coupon,
                 total_amount: payload.total_amount,
                 total_compare_amount: payload.total_compare_amount,
                 estimated_tax: payload.estimated_tax,
@@ -41,7 +41,7 @@ export default function Payment(state = initialState, action) {
             return {
                 ...state,
                 original_price: 0.00,
-                
+                total_after_coupon: 0.00,
                 total_amount: 0.00,
                 total_compare_amount: 0.00,
                 estimated_tax: 0.00,

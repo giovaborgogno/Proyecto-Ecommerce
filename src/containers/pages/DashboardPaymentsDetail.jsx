@@ -72,8 +72,8 @@ const DashboardPaymentsDetail = ({
         get_order_detail(transaction_id)
     }, [transaction_id])
 
-    useEffect(()=>{
-        window.scrollTo(0,0)
+    useEffect(() => {
+        window.scrollTo(0, 0)
     })
 
     if (isAuthenticated !== null && isAuthenticated !== undefined && !isAuthenticated)
@@ -310,109 +310,120 @@ const DashboardPaymentsDetail = ({
 
                                     {order !== undefined && order !== null && order ?
 
-                                    <div className="bg-white">
-                                        <div className="max-w-7xl mx-auto px-4  sm:px-6  lg:px-8">
-                                            <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Order Details</h1>
+                                        <div className="bg-white">
+                                            <div className="max-w-7xl mx-auto px-4  sm:px-6  lg:px-8">
+                                                <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Order Details</h1>
 
-                                            <div className="text-sm border-b border-gray-200 mt-2 pb-5 sm:flex sm:justify-between">
-                                                <dl className="flex">
-                                                    <dt className="text-gray-500">Order number&nbsp;</dt>
-                                                    <dd className="font-medium text-gray-900">{transaction_id}</dd>
-                                                    <dt>
-                                                        <span className="sr-only">Date</span>
-                                                        <span className="text-gray-400 mx-2" aria-hidden="true">
-                                                            &middot;
-                                                        </span>
-                                                    </dt>
-                                                    <dd className="font-medium text-gray-900">
-                                                        <time dateTime="2021-03-22">{moment(order.date_issued).fromNow()}</time>
-                                                    </dd>
-                                                    <dt className="text-gray-500 ml-3">Status&nbsp;</dt>
-                                                    {order.status === 'processed' ?
-                                                        <>
-                                                            <dd className="font-medium text-gray-900">Processed</dd>
-                                                        </>
-                                                        : order.status === 'shipped' ?
+                                                <div className="text-sm border-b border-gray-200 mt-2 pb-5 sm:flex sm:gap-3">
+                                                    <dl className="flex">
+                                                        <dt className="text-gray-500">Order number&nbsp;</dt>
+                                                        <dd className="font-medium text-gray-900">{transaction_id}</dd>
+                                                        <dt>
+                                                            <span className="sr-only">Date</span>
+                                                            <span className="text-gray-400 mx-2" aria-hidden="true">
+                                                                &middot;
+                                                            </span>
+                                                        </dt>
+                                                        <dd className="font-medium text-gray-900">
+                                                            <time dateTime="2021-03-22">{moment(order.date_issued).fromNow()}</time>
+                                                        </dd>
+                                                        
+                                                        </dl>
+                                                    <dl className="flex">
+                                                        
+                                                        <dt className="text-gray-500">Status&nbsp;</dt>
+                                                        {order.status === 'processed' ?
                                                             <>
-                                                                <dd className="font-medium text-gray-900">Shipped</dd>
+                                                                <dd className="font-medium text-gray-900">Processed</dd>
                                                             </>
-                                                            : order.status === 'delivered' ?
+                                                            : order.status === 'shipped' ?
                                                                 <>
-                                                                    <dd className="font-medium text-gray-900">Delivered</dd>
+                                                                    <dd className="font-medium text-gray-900">Shipped</dd>
                                                                 </>
-                                                                : order.status === 'cancelled' ?
-                                                                
-                                                                <>
-                                                                    <dd className="font-medium text-gray-900">Cancelled</dd>
-                                                                </>
-                                                                :
+                                                                : order.status === 'delivered' ?
+                                                                    <>
+                                                                        <dd className="font-medium text-gray-900">Delivered</dd>
+                                                                    </>
+                                                                    : order.status === 'cancelled' ?
 
-                                                                <>
-                                                                    <dd className="font-medium text-gray-900">Order Placed</dd>
-                                                                </>
-                                                    }
-                                                    <dt className="ml-3 text-gray-500">Total Amount&nbsp;</dt>
-                                                    <dd className="font-medium text-gray-900">${order.amount}</dd>
-                                                </dl>
+                                                                        <>
+                                                                            <dd className="font-medium text-gray-900">Cancelled</dd>
+                                                                        </>
+                                                                        :
 
+                                                                        <>
+                                                                            <dd className="font-medium text-gray-900">Order Placed</dd>
+                                                                        </>
+                                                        }
+                                                        <dt className="ml-3 text-gray-500">Total Amount&nbsp;</dt>
+                                                        <dd className="font-medium text-gray-900">${order.amount}</dd>
+                                                    </dl>
 
-                                            </div>
-
-                                            <div className="mt-8">
-                                                <h2 className="sr-only">Products purchased</h2>
-
-                                                <div className="space-y-10">
-                                                    {order.order_items.map((product) => (
-                                                        <div
-                                                            key={order.transaction_id}
-                                                            className="grid grid-cols-1 text-sm sm:grid-rows-1 sm:grid-cols-12 sm:gap-x-6 md:gap-x-8 lg:gap-x-8"
-                                                        >
-                                                            
-                                                            <div className="mt-6 sm:col-span-7 sm:mt-0 md:row-end-1">
-                                                                <h3 className="text-lg font-medium text-gray-900">
-                                                                    <Link to={`/shop`}>{product.name}</Link>
-                                                                </h3>
-                                                                <p className="font-medium text-gray-900 mt-1">Price: ${product.price}</p>
-                                                                <p className="text-gray-500 mt-3">Count: {product.count}</p>
-                                                            </div>
-                                                            
-                                                        </div>
-                                                    ))}
 
                                                 </div>
-                                                <div className="sm:col-span-12 md:col-span-7">
-                                                                <dl className="grid grid-cols-1 gap-y-8 border-b py-8 border-gray-200 sm:grid-cols-2 sm:gap-x-6 sm:py-6 md:py-10">
-                                                                    <div>
-                                                                        <dt className="font-medium text-gray-900">Delivery address</dt>
-                                                                        <dd className="mt-3 text-gray-500">
-                                                                            <span className="block">{order.address_line_1}</span>
-                                                                            <span className="block">{order.address_line_2}</span>
-                                                                            <span className="block">{order.city}</span>
-                                                                            <span className="block">{order.state_province_region}</span>
-                                                                            <span className="block">{order.postal_zip_code}</span>
-                                                                            <span className="block">{order.country_region}</span>
-                                                                        </dd>
-                                                                    </div>
-                                                                    <div>
-                                                                        <dt className="font-medium text-gray-900">Shipping updates</dt>
-                                                                        <dd className="mt-3 text-gray-500 space-y-3">
-                                                                            {/* <p>{product.email}</p> */}
-                                                                            <p>{order.telephone_number}</p>
-                                                                            <p>{order.shipping_name} {order.shipping_time}: ${order.shipping_price}</p>
-                                                                            
-                                                                        </dd>
-                                                                    </div>
-                                                                </dl>
-                                                                
-                                                            </div>
-                                            </div>
 
-                                            
+                                                <div className="mt-8">
+                                                    <h2 className="sr-only">Products purchased</h2>
+
+                                                    <div className="space-y-10">
+                                                        {order.order_items.map((product) => (
+                                                            <div
+                                                                key={product.id}
+                                                                className="grid grid-cols-1 text-sm sm:grid-rows-1 sm:grid-cols-12 sm:gap-x-6 md:gap-x-8 lg:gap-x-8"
+                                                            >
+                                                                <div className="sm:col-span-4 md:col-span-2 md:row-end-2 md:row-span-2">
+                                                                    <div className="aspect-w-1 aspect-h-1 bg-gray-50 rounded-lg overflow-hidden w-20 h-20">
+                                                                        <Link to={`/product/${product.id}`}>
+                                                                        <img src={product.photo} alt="" className="object-center object-cover w-20 h-20 " />
+                                                                        </Link>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="mt-6 sm:col-span-7 sm:mt-0 md:row-end-1">
+                                                                    <h3 className="text-lg font-medium text-gray-900">
+                                                                        <Link to={`/product/${product.id}`}>{product.name}</Link>
+                                                                    </h3>
+                                                                    <p className="font-medium text-gray-900 mt-1">Price: ${product.price}</p>
+                                                                    <p className="text-gray-500 mt-3">Count: {product.count}</p>
+                                                                </div>
+
+                                                            </div>
+                                                        ))}
+
+                                                    </div>
+                                                    <div className="sm:col-span-12 md:col-span-7">
+                                                        <dl className="grid grid-cols-1 gap-y-8 border-b py-8 border-gray-200 sm:grid-cols-2 sm:gap-x-6 sm:py-6 md:py-10">
+                                                            <div>
+                                                                <dt className="font-medium text-gray-900">Delivery address</dt>
+                                                                <dd className="mt-3 text-gray-500">
+                                                                    <span className="block">{order.address_line_1}</span>
+                                                                    <span className="block">{order.address_line_2}</span>
+                                                                    <span className="block">{order.city}</span>
+                                                                    <span className="block">{order.state_province_region}</span>
+                                                                    <span className="block">{order.postal_zip_code}</span>
+                                                                    <span className="block">{order.country_region}</span>
+                                                                </dd>
+                                                            </div>
+                                                            <div>
+                                                                <dt className="font-medium text-gray-900">Shipping updates</dt>
+                                                                <dd className="mt-3 text-gray-500 space-y-3">
+                                                                    {/* <p>{product.email}</p> */}
+                                                                    <p>{order.telephone_number}</p>
+                                                                    <p>{order.shipping_name} {order.shipping_time}: ${order.shipping_price}</p>
+
+                                                                </dd>
+                                                            </div>
+                                                        </dl>
+
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
                                         </div>
-                                    </div>
-                                    :
-                                    <>loading...</>
-}
+                                        :
+                                        <>loading...</>
+                                    }
 
                                     {/* /End replace */}
                                 </div>

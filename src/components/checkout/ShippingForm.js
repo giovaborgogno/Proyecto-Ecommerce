@@ -22,9 +22,9 @@ const ShippingForm = ({
     shipping_id,
     shipping,
     renderPaymentInfo,
-    // apply_coupon,
-    coupon = null,
-    // coupon_name,
+    apply_coupon,
+    coupon,
+    coupon_name,
     total_after_coupon
 }) => {
     return (
@@ -42,8 +42,8 @@ const ShippingForm = ({
               </div>
               
               <div className="flex items-center justify-between">
-                <form >
-                {/* <form onSubmit={e => apply_coupon(e)}> */}
+                {/* <form > */}
+                <form onSubmit={e => apply_coupon(e)}>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                         Discount Coupon
                     </label>
@@ -54,7 +54,7 @@ const ShippingForm = ({
                             name='coupon_name'
                             type='text'
                             onChange={e => onChange(e)}
-                            // value={coupon_name}
+                            value={coupon_name}
                             className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md pl-4 sm:text-sm border-gray-300"
                             placeholder="Enter Code"
                         />

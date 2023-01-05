@@ -63,9 +63,11 @@ class ListOrderDetailView(APIView):
                 for order_item in order_items:
                     sub_item = {}
 
+                    sub_item['id'] = order_item.product.id
                     sub_item['name'] = order_item.name
                     sub_item['price'] = order_item.price
                     sub_item['count'] = order_item.count
+                    sub_item['photo'] = order_item.product.get_thumbnail()
 
                     result['order_items'].append(sub_item)
                 return Response(
