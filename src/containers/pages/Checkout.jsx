@@ -12,6 +12,7 @@ import {
 } from '../../redux/actions/cart'
 import {check_coupon} from '../../redux/actions/coupons'
 import {get_shipping_options} from '../../redux/actions/shipping'
+import {get_user_profile, update_user_profile} from '../../redux/actions/profile'
 import CartItem from "../../components/cart/CartItem";
 import { Link } from "react-router-dom";
 import { setAlert } from "../../redux/actions/alert";
@@ -54,7 +55,10 @@ const Checkout = ({
     get_item_total,
     check_coupon,
     coupon,
-    total_after_coupon
+    total_after_coupon,
+    update_user_profile,
+    get_user_profile,
+    profile
 }) => {
 
     const [formData, setFormData] = useState({
@@ -92,11 +96,11 @@ const Checkout = ({
     const buy = async e => {
         e.preventDefault();
         let nonce = await data.instance.requestPaymentMethod();
-        if (shipping_id && shipping_id !== null && shipping_id !== undefined) {
+        if (coupon && coupon !== null && coupon !== undefined) {
           process_payment(
               nonce,
               shipping_id,
-              coupon_name,
+              coupon.name,
               full_name,
               address_line_1,
               address_line_2,
@@ -106,10 +110,21 @@ const Checkout = ({
               country_region,
               telephone_number
           );
+          update_user_profile(
+            address_line_1,
+            address_line_2,
+            city,
+            state_province_region,
+            postal_zip_code,
+            telephone_number,
+            country_region
+          )
+
         } else {
           process_payment(
               nonce,
               shipping_id,
+              '',
               full_name,
               address_line_1,
               address_line_2,
@@ -119,13 +134,22 @@ const Checkout = ({
               country_region,
               telephone_number
           );
+          update_user_profile(
+            address_line_1,
+            address_line_2,
+            city,
+            state_province_region,
+            postal_zip_code,
+            telephone_number,
+            country_region
+          )
       }
     }
 
     const apply_coupon = async e => {
         e.preventDefault();
   
-          check_coupon(coupon_name);
+        check_coupon(coupon_name);
       };
 
     const [render, setRender] = useState(false)
@@ -135,6 +159,7 @@ const Checkout = ({
         get_shipping_options();
         if(isAuthenticated !== null && isAuthenticated !== undefined && isAuthenticated){
             get_client_token();
+            get_user_profile();
             
         }
     }, [])
@@ -146,7 +171,7 @@ const Checkout = ({
     },[])
     
     useEffect(() => {
-      if (coupon && coupon !== null && coupon !== undefined)
+      if (shipping_id && shipping_id !== null && shipping_id !== undefined)
           get_payment_total(shipping_id, coupon.name);
       else
           get_payment_total(shipping_id,'');
@@ -310,6 +335,7 @@ const Checkout = ({
                             coupon={coupon}
                             apply_coupon={apply_coupon}
                             coupon_name={coupon_name}
+                            profile={profile}
                         />
                     </div>
 
@@ -336,6 +362,7 @@ const mapStateToProps = state => ({
     estimated_tax: state.Payment.estimated_tax,
     shipping_cost: state.Payment.shipping_cost,
     coupon: state.Coupons.coupon,
+    profile: state.Profile.profile
 })
 export default connect(mapStateToProps, {
 
@@ -349,5 +376,7 @@ export default connect(mapStateToProps, {
     get_items,
     get_total,
     get_item_total,
-    check_coupon
+    check_coupon,
+    update_user_profile,
+    get_user_profile,
 })(Checkout);

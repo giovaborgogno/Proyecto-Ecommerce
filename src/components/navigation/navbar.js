@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react'
-import { Menu, Popover, Transition } from '@headlessui/react'
+import { Dialog, Menu, Popover, Transition } from '@headlessui/react'
 import { Link, Navigate } from 'react-router-dom'
 import Alert from '../../components/alert'
 import { connect } from 'react-redux'
@@ -17,6 +17,7 @@ import {
   DesktopComputerIcon,
   GlobeAltIcon,
   InformationCircleIcon,
+  MenuAlt2Icon,
   MenuIcon,
   NewspaperIcon,
   OfficeBuildingIcon,
@@ -29,6 +30,7 @@ import {
 } from '@heroicons/react/outline'
 import { ChevronDownIcon, ShoppingCartIcon } from '@heroicons/react/solid'
 import { useEffect } from 'react'
+import DashboardLinks from '../dashboard/DashboardLinks'
 
 const solutions = [
   {
@@ -106,6 +108,8 @@ function Navbar({
     get_categories()
   }, [])
 
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   const [redirect, setRedirect] = useState(false);
 
   const [render, setRender] = useState(false);
@@ -141,8 +145,8 @@ function Navbar({
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex justify-center w-full rounded-full  text-sm font-medium text-gray-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-          <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
-            <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+          <span className="inline-block sm:h-10 sm:w-10 h-8 w-8 rounded-full overflow-hidden bg-gray-100">
+            <svg className="sm:h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
           </span>
@@ -236,12 +240,173 @@ function Navbar({
 
   )
 
+  const dashboardLinks = () => {
+    return (
+      <>
+        <Menu as="div" className="relative inline-block text-left">
+          <div>
+            <Menu.Button className="inline-flex justify-center w-full rounded-full  text-sm font-medium text-gray-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+
+            >
+              <span className="inline-block sm:h-10 sm:w-10 h-8 w-8 rounded-full overflow-hidden bg-gray-100">
+                <svg className="sm:h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </span>
+            </Menu.Button>
+          </div>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div className="py-1">
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={() => setSidebarOpen(true)}
+                      className={classNames(
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block px-4 py-2 text-sm'
+                      )}
+                    >
+                      Dashboard
+                    </button>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link
+                      to="/shop"
+                      className={classNames(
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block px-4 py-2 text-sm'
+                      )}
+                    >
+                      Shop
+                    </Link>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block px-4 py-2 text-sm'
+                      )}
+                    >
+                      License
+                    </a>
+                  )}
+                </Menu.Item>
+                <form method="POST" action="#">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        onClick={logoutHandler}
+                        className={classNames(
+                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                          'block w-full text-left px-4 py-2 text-sm'
+                        )}
+                      >
+                        Sign out
+                      </button>
+                    )}
+                  </Menu.Item>
+                </form>
+              </div>
+            </Menu.Items>
+          </Transition>
+
+
+        </Menu>
+        {/* <div className="bg-white shadow">
+          <button
+            type="button"
+            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+            onClick={() => setSidebarOpen(true)}
+          >
+          <span className="sr-only">Open sidebar</span>
+            <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
+          </button>
+
+        </div> */}
+      </>
+    )
+  }
+
   return (
     <>
+      <Transition.Root show={sidebarOpen} as={Fragment}>
+        <Dialog as="div" className="fixed inset-0 flex z-40 md:hidden" onClose={setSidebarOpen}>
+          <Transition.Child
+            as={Fragment}
+            enter="transition-opacity ease-linear duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-300"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Dialog.Overlay className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+          </Transition.Child>
+          <Transition.Child
+            as={Fragment}
+            enter="transition ease-in-out duration-300 transform"
+            enterFrom="translate-x-full"
+            enterTo="translate-x-20"
+            leave="transition ease-in-out duration-300 transform"
+            leaveFrom="translate-x-20"
+            leaveTo="translate-x-full"
+          >
+            <div className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-white">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-in-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in-out duration-300"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="absolute top-0 right-0 -m-12 pt-2">
+
+                </div>
+              </Transition.Child>
+              <div className="flex-shrink-0 flex items-center px-4">
+                <button
+                  type="button"
+                  className=" flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-200"
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  <span className="sr-only">Close sidebar</span>
+                  <XIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />
+                </button>
+              </div>
+              <div className="mt-5 flex-1 h-0 overflow-y-auto">
+                <nav className="px-2 space-y-1">
+                  <DashboardLinks classNames={classNames} />
+                </nav>
+              </div>
+            </div>
+          </Transition.Child>
+          <div className="flex-shrink-0 w-14" aria-hidden="true">
+            {/* Dummy element to force sidebar to shrink to fit close icon */}
+          </div>
+        </Dialog>
+      </Transition.Root>
+
       <Popover className="relative bg-white">
         <div className="absolute inset-0 shadow z-30 pointer-events-none" aria-hidden="true" />
         <div className="relative z-20">
           <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-5 sm:px-6 sm:py-4 lg:px-8 md:justify-start md:space-x-10">
+            
             <div>
               <Link to="/" className="flex">
                 <span className="sr-only">Workflow</span>
@@ -253,15 +418,21 @@ function Navbar({
               </Link>
 
             </div>
+            
             <div className="-mr-2 -my-2 md:hidden">
               <Link to='/cart' className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <ShoppingCartIcon className="h-6 w-6 hover:text-gray-900" aria-hidden="true" />
               </Link>
-              <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+
+              {/* <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <span className="sr-only">Open menu</span>
                 <MenuIcon className="h-6 w-6" aria-hidden="true" />
-              </Popover.Button>
+              </Popover.Button> */}
+              {
+                isAuthenticated ? dashboardLinks() : <></>
+              }
             </div>
+            
             <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
               <Popover.Group as="nav" className="flex space-x-10">
 
@@ -378,38 +549,48 @@ function Navbar({
                   </a>
                 </div>
                 <div className="mt-6">
-                  {isAuthenticated!==null && isAuthenticated !==undefined && isAuthenticated ?
-                <>
-                <Link
-                    to="/dashboard"
-                    className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                  >
-                    Dashboard
-                  </Link>
-                </>
-                :  
-                <>
-                <Link
-                    to="/signup"
-                    className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                  >
-                    Sign up
-                  </Link>
-                  <p className="mt-6 text-center text-base font-medium text-gray-500">
-                    Existing customer?{' '}
-                    <Link to="/login" className="text-indigo-600 hover:text-indigo-500">
-                      Sign in
-                    </Link>
-                  </p>
-                </>
-                }
-                  
+                  {isAuthenticated !== null && isAuthenticated !== undefined && isAuthenticated ?
+                    <>
+                      <button
+
+                        onClick={logoutHandler}
+                        className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        Sign Out
+                      </button>
+                    </>
+                    :
+                    <>
+                      <Link
+                        to="/signup"
+                        className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        Sign up
+                      </Link>
+                      <p className="mt-6 text-center text-base font-medium text-gray-500">
+                        Existing customer?{' '}
+                        <Link to="/login" className="text-indigo-600 hover:text-indigo-500">
+                          Sign in
+                        </Link>
+                      </p>
+                    </>
+                  }
+
                 </div>
               </div>
             </div>
           </Popover.Panel>
         </Transition>
       </Popover>
+      <div className='sm:hidden'>
+              <SearchBox
+                search={search}
+                onChange={onChange}
+                onSubmit={onSubmit}
+                categories={categories}
+              />
+              
+            </div>
       <Alert />
     </>
   )

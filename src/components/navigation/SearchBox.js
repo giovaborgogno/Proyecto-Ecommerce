@@ -14,7 +14,7 @@ const SearchBox = ({
     return (
         <form onSubmit={e => onSubmit(e)}>
 
-            <div className="mt-1 flex rounded-md shadow-sm border border-gray-200">
+            <div className="mt-1 flex rounded-md shadow-sm border border-gray-200 ">
                 <div className="relative flex items-stretch flex-grow focus-within:z-10">
 
                     <div className="mt-1 mx-1 px-2 py-1">

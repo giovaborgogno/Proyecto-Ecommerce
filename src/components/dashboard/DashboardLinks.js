@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom'
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: false },
     { name: 'Payment History', href: '/dashboard/payments', icon: CreditCardIcon, current: false },
-    // { name: 'Team', href: '#', icon: UsersIcon, current: false },
+    { name: 'Profile', href: '/dashboard/profile', icon: UsersIcon, current: false },
     // { name: 'Projects', href: '#', icon: FolderIcon, current: false },
     // { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
     // { name: 'Documents', href: '#', icon: InboxIcon, current: false },

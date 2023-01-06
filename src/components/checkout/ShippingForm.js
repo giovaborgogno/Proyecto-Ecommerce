@@ -25,9 +25,12 @@ const ShippingForm = ({
     apply_coupon,
     coupon,
     coupon_name,
-    total_after_coupon
+    total_after_coupon,
+    profile
 }) => {
     return (
+        {...user!==null && user !== undefined && user && profile && 
+        <>
         <section
             aria-labelledby="summary-heading"
             className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
@@ -163,16 +166,11 @@ const ShippingForm = ({
                         <input
                             type='text'
                             name='full_name'
-                            {...user !== null && user !== undefined &&
-                                <>
                             placeholder={`${user.first_name} ${user.last_name}`}
-                            </>
-                            
-                            }
                             onChange={e => onChange(e)}
                             value={full_name}
                             required
-                            className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
+                            className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300 "
                         />
                         </div>
                     </div>
@@ -188,7 +186,7 @@ const ShippingForm = ({
                         <input
                             type='text'
                             name='address_line_1'
-                            // placeholder={`${profile.address_line_1}`}
+                            placeholder={`${profile.address_line_1}`}
                             onChange={e => onChange(e)}
                             value={address_line_1}
                             required
@@ -207,7 +205,7 @@ const ShippingForm = ({
                         <input
                             type='text'
                             name='address_line_2'
-                            // placeholder={`${profile.address_line_2}`}
+                            placeholder={`${profile.address_line_2}`}
                             onChange={e => onChange(e)}
                             value={address_line_2}
                             className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
@@ -225,7 +223,7 @@ const ShippingForm = ({
                         <input
                             type='text'
                             name='city'
-                            // placeholder={`${profile.city}`}
+                            placeholder={`${profile.city}`}
                             onChange={e => onChange(e)}
                             value={city}
                             required
@@ -244,7 +242,7 @@ const ShippingForm = ({
                         <input
                             type='text'
                             name='state_province_region'
-                            // placeholder={`${profile.state_province_region}`}
+                            placeholder={`${profile.state_province_region}`}
                             onChange={e => onChange(e)}
                             value={state_province_region}
                             required
@@ -263,7 +261,7 @@ const ShippingForm = ({
                         <input
                             type='text'
                             name='postal_zip_code'
-                            // placeholder={`${profile.zipcode}`}
+                            placeholder={`${profile.zipcode}`}
                             onChange={e => onChange(e)}
                             value={postal_zip_code}
                             required
@@ -309,7 +307,7 @@ const ShippingForm = ({
                         <input
                             type='tel'
                             name='telephone_number'
-                            // placeholder={`${profile.phone}`}
+                            placeholder={`${profile.phone}`}
                             onChange={e => onChange(e)}
                             value={telephone_number}
                             required
@@ -324,6 +322,8 @@ const ShippingForm = ({
 
             </form>
           </section>
+        </>}
+        
 
     )
 }

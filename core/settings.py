@@ -49,7 +49,7 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-PROJET_APPS = ['apps.user']
+PROJET_APPS = ['apps.user', 'apps.user_profile']
 ECOMMERCE_APPS = ['apps.category','apps.product', 'apps.cart', 'apps.shipping', 'apps.orders', 'apps.payment', 'apps.coupons']
 THIRD_PARTY_APPS = [
     'corsheaders',
