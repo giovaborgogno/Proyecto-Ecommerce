@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 import os
 from apps.cart.models import Cart
 from apps.user_profile.models import UserProfile
+from apps.wishlist.models import WishList
 
 # Create your models here.
 class UserAccountManager(BaseUserManager):
@@ -21,6 +22,9 @@ class UserAccountManager(BaseUserManager):
         
         profile = UserProfile.objects.create(user=user)
         profile.save()
+        
+        wishlist = WishList.objects.create(user=user)
+        wishlist.save()
         
         return user
     def create_superuser(self, email, password, **extra_fields):

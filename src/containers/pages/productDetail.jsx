@@ -1,5 +1,5 @@
 import Layout from "../../hocs/layout";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { get_product, get_related_products } from "../../redux/actions/products";
 import { useEffect } from "react";
@@ -17,6 +17,12 @@ import {
     remove_item
 } from '../../redux/actions/cart'
 import { Link } from "react-router-dom";
+import { 
+    add_wishlist_item, 
+    get_wishlist_items, 
+    get_wishlist_item_total ,
+    remove_wishlist_item
+  } from '../../redux/actions/wishlist';
 
 const ProductDetail = ({
     get_product,
@@ -29,6 +35,12 @@ const ProductDetail = ({
     get_item_total,
     items,
     remove_item,
+    add_wishlist_item, 
+    get_wishlist_items, 
+    get_wishlist_item_total ,
+    remove_wishlist_item,
+    isAuthenticated,
+    wishlist
 }) => {
     // const [selectedColor, setSelectedColor] = useState(product.colors[0])
 
@@ -36,7 +48,12 @@ const ProductDetail = ({
 
     const [product_added, setProduct_added] = useState(false)
 
+    const [isFavorite, setIsFavorite] = useState(false)
+
     const navigate = useNavigate()
+
+    const params = useParams()
+    const productId = params.productId;
 
     const addToCart = async () => {
         if (product && product !== null && product !== undefined && product.quantity > 0) {
@@ -107,14 +124,83 @@ const ProductDetail = ({
         await get_item_total();
         await isAdded();
     }
-    const params = useParams()
-    const productId = params.productId;
+
+    const is_Favorite = async () => {
+        if(
+            wishlist &&
+            wishlist !== null &&
+            wishlist !== undefined &&
+            product &&
+            product !== null &&
+            product !== undefined
+            ){
+              wishlist.map(item => {
+                  if (item.product.id.toString() === productId.toString()) {
+                      setIsFavorite(true);
+                  }
+              });
+          }
+    }
+
+    const addToWishlist = async () => {
+        if (isAuthenticated) {
+          let isPresent = false;
+
+          if(
+            wishlist &&
+            wishlist !== null &&
+            wishlist !== undefined &&
+            product &&
+            product !== null &&
+            product !== undefined
+            ){
+              wishlist.map(item => {
+                  if (item.product.id.toString() === productId.toString()) {
+                      isPresent = true;
+                  }
+              });
+          }
+          
+          if (isPresent) {
+            await remove_wishlist_item(productId);
+            // await remove_wishlist_item(product.id);
+            await get_wishlist_items();
+            await get_wishlist_item_total();
+            setIsFavorite(false);
+          } else {
+            await remove_wishlist_item(productId);
+            // await remove_wishlist_item(product.id);
+              await add_wishlist_item(productId);
+            //   await add_wishlist_item(product.id);
+              await get_wishlist_items();
+              await get_wishlist_item_total();
+              await get_items();
+              await get_total();
+              await get_item_total();
+              setIsFavorite(true);
+          }
+            
+        } else {
+          return <Navigate to="/login"/>
+        }
+      };
+
+    const synchWishlist = async () => {
+        await get_wishlist_items() 
+        await get_wishlist_item_total()
+        await is_Favorite();
+    }
+
+
+
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
         get_product(productId)
         get_related_products(productId)
         synchCart();
+        synchWishlist();
     }, [])
 
     return (
@@ -230,13 +316,25 @@ const ProductDetail = ({
                                             </button>
                                     }
 
+                                    {isFavorite? 
                                     <button
-                                        type="button"
-                                        className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+                                    onClick={addToWishlist}
+                                    className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-red-400 hover:bg-gray-100 hover:text-gray-500"
+                                >
+                                    <HeartIcon className="h-6 w-6 flex-shrink-0" aria-hidden="true" />
+                                    <span className="sr-only">Add to favorites</span>
+                                </button>
+                                :
+                                <button
+                                        onClick={addToWishlist}
+                                        className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-red-100 hover:text-red-500"
                                     >
                                         <HeartIcon className="h-6 w-6 flex-shrink-0" aria-hidden="true" />
                                         <span className="sr-only">Add to favorites</span>
                                     </button>
+                                    }
+
+                                
                                 </div>
                                 <Link to="/cart">
                                     <button
@@ -262,6 +360,8 @@ const mapStateToProps = state => ({
     product: state.Products.product,
     related_products: state.Products.related_products,
     items: state.Cart.items,
+    isAuthenticated: state.Auth.isAuthenticated,
+    wishlist: state.Wishlist.items
 
 })
 
@@ -273,4 +373,8 @@ export default connect(mapStateToProps, {
     get_total,
     get_item_total,
     remove_item,
+    add_wishlist_item, 
+    get_wishlist_items, 
+    get_wishlist_item_total ,
+    remove_wishlist_item
 })(ProductDetail)

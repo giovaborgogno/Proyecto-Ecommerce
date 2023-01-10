@@ -171,7 +171,7 @@ const Checkout = ({
     },[])
     
     useEffect(() => {
-      if (shipping_id && shipping_id !== null && shipping_id !== undefined)
+      if (shipping_id && shipping_id !== null && shipping_id !== undefined && coupon)
           get_payment_total(shipping_id, coupon.name);
       else
           get_payment_total(shipping_id,'');

@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/orders/', include('apps.orders.urls')),
     path('api/payment/', include('apps.payment.urls')),
     path('api/coupons/', include('apps.coupons.urls')),
+    path('api/wishlist/', include('apps.wishlist.urls')),
     
     path('api/user_profile/', include('apps.user_profile.urls')),
     
