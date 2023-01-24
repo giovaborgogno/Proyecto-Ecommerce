@@ -252,6 +252,8 @@ function Navbar({
                 <svg className="sm:h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
+                {/* <img src="%PUBLIC_URL%/g-logo.svg"/> */}
+                
               </span>
             </Menu.Button>
           </div>
@@ -409,10 +411,11 @@ function Navbar({
             
             <div>
               <Link to="/" className="flex">
-                <span className="sr-only">Workflow</span>
+                <span className="sr-only">Giovanni Ecommerce</span>
                 <img
                   className="h-8 w-auto sm:h-10"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                  // src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                  src="g-logo.svg"
                   alt=""
                 />
               </Link>
@@ -485,9 +488,11 @@ function Navbar({
                   <div>
                     <img
                       className="h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                      alt="Workflow"
+                      // src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                      src="g-logo.svg"
+                      alt="Giovanni Ecommerce"
                     />
+                    
                   </div>
 
                   <div className="-mr-2">
