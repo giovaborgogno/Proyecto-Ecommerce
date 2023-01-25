@@ -35,7 +35,8 @@ const Cart = ({
     get_wishlist_items, 
     get_wishlist_item_total ,
     remove_wishlist_item,
-    add_item
+    add_item,
+    eth_price
 }) => {
 
     const [render, setRender] = useState(false)
@@ -245,7 +246,11 @@ const Cart = ({
 
                                 <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
                                     <dt className="text-base font-medium text-gray-900">Order total</dt>
+                                    {eth_price!==null?
+                                    <dd className="text-base font-medium text-gray-900">${amount.toFixed(2)} or {(amount / eth_price).toFixed(4)} ETH</dd>
+                                    :
                                     <dd className="text-base font-medium text-gray-900">${amount.toFixed(2)}</dd>
+                                    }
                                 </div>
                             </dl>
 
@@ -270,6 +275,7 @@ const mapStateToProps = state => ({
     amount: state.Cart.amount,
     compare_amount: state.Cart.compare_amount,
     total_items: state.Cart.total_items,
+    eth_price: state.web3.eth_price
 
 })
 

@@ -18,6 +18,7 @@ const Home = ({
     get_products_by_sold,
     products_arrival,
     products_sold,
+    eth_price
 }) => {
 
     
@@ -34,8 +35,8 @@ const Home = ({
             <div>
                 
                 <Banner/>
-                <ProductsArrival data={products_arrival}/>
-                <ProductsSold data={products_sold}/>
+                <ProductsArrival data={products_arrival} eth_price={eth_price}/>
+                <ProductsSold data={products_sold} eth_price={eth_price}/>
             </div>
         </Layout>
     )
@@ -43,9 +44,11 @@ const Home = ({
 const mapStateToProps = state => ({
     products_arrival: state.Products.products_arrival,
     products_sold: state.Products.products_sold,
+    eth_price: state.web3.eth_price
 })
 
 export default connect(mapStateToProps,{
     get_products_by_arrival,
     get_products_by_sold,
+    
 })(Home)

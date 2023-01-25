@@ -17,7 +17,7 @@ import { Link } from "react-router-dom"
   ```
 */
   
-  export default function ProductsSold({data}) {
+  export default function ProductsSold({data, eth_price}) {
     return (
       <div className="bg-white">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
@@ -44,7 +44,7 @@ import { Link } from "react-router-dom"
                     {product.name}
                   </Link>
                 </h3>
-                <p className="mt-1 text-sm text-gray-500">${product.price}</p>
+                <p className="mt-1 text-sm text-gray-500">${product.price} or {(product.price / eth_price).toFixed(4)} ETH</p>
               </div>
             ))}
           </div>

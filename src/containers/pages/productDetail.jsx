@@ -23,6 +23,7 @@ import {
     get_wishlist_item_total ,
     remove_wishlist_item
   } from '../../redux/actions/wishlist';
+  import { etherPrice } from "../../redux/actions/web3";
 
 const ProductDetail = ({
     get_product,
@@ -40,7 +41,10 @@ const ProductDetail = ({
     get_wishlist_item_total ,
     remove_wishlist_item,
     isAuthenticated,
-    wishlist
+    wishlist,
+    etherPrice,
+    eth_price
+    
 }) => {
     // const [selectedColor, setSelectedColor] = useState(product.colors[0])
 
@@ -197,6 +201,7 @@ const ProductDetail = ({
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        etherPrice()
         get_product(productId)
         get_related_products(productId)
         synchCart();
@@ -205,6 +210,8 @@ const ProductDetail = ({
 
     return (
         <Layout>
+            {product?
+            <>
             <div className="bg-white">
                 <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
                     <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
@@ -215,7 +222,9 @@ const ProductDetail = ({
 
                             <div className="mt-3">
                                 <h2 className="sr-only">Product information</h2>
-                                <p className="text-3xl text-gray-900">{product && product.price}</p>
+                                {eth_price && eth_price !== null &&
+                                <p className="text-3xl text-gray-900">${product && product.price} or {(product.price / eth_price).toFixed(4)} ETH</p>
+                                }
                             </div>
 
 
@@ -352,6 +361,13 @@ const ProductDetail = ({
                     </div>
                 </div>
             </div>
+            </>
+            :
+            <>
+            <div>
+                loading...
+            </div></>}
+            
         </Layout >
     )
 }
@@ -361,7 +377,9 @@ const mapStateToProps = state => ({
     related_products: state.Products.related_products,
     items: state.Cart.items,
     isAuthenticated: state.Auth.isAuthenticated,
-    wishlist: state.Wishlist.items
+    wishlist: state.Wishlist.items,
+    eth_price: state.web3.eth_price
+    
 
 })
 
@@ -376,5 +394,6 @@ export default connect(mapStateToProps, {
     add_wishlist_item, 
     get_wishlist_items, 
     get_wishlist_item_total ,
-    remove_wishlist_item
+    remove_wishlist_item,
+    etherPrice
 })(ProductDetail)

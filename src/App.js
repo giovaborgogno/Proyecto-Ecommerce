@@ -23,6 +23,7 @@ import Dashboard from './containers/pages/Dashboard';
 import DashboardPayments from './containers/pages/DashboardPayments';
 import DashboardPaymentsDetail from './containers/pages/DashboardPaymentsDetail';
 import DashboardProfile from './containers/pages/DashboardProfile';
+import Connect from './containers/pages/Connect';
 
 function App() {
   return (
@@ -43,6 +44,8 @@ function App() {
         <Route exact path='/reset_password' element={<ResetPassword/>}/>
         <Route exact path='/password/reset/confirm/:uid/:token' element={<ResetPasswordConfirm/>}/>
       
+        <Route exact path='/connect' element={<Connect/>}/>
+
         <Route exact path='/shop' element={<Shop/>}/>
         <Route exact path='/product/:productId' element={<ProductDetail/>}/>
         <Route exact path='/search' element={<Search/>}/>

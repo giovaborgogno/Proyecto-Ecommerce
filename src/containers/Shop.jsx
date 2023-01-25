@@ -9,6 +9,7 @@ import { get_categories } from '../redux/actions/categories'
 import { get_products, get_filtered_products } from '../redux/actions/products'
 import ProductCard from '../components/product/ProductCard'
 import { prices } from '../helpers/fixedPrices'
+import {etherPrice} from '../redux/actions/web3'
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
   { name: 'Best Rating', href: '#', current: false },
@@ -71,7 +72,9 @@ const Shop = ({
   get_products,
   products,
   get_filtered_products,
-  filtered_products
+  filtered_products,
+  eth_price,
+  etherPrice,
 }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [filtered, setFiltered] = useState(false)
@@ -92,6 +95,7 @@ const Shop = ({
   useEffect(() => {
     get_categories()
     get_products()
+    etherPrice()
     window.scrollTo(0, 0)
   }, [])
 
@@ -111,12 +115,13 @@ const Shop = ({
       filtered_products &&
       filtered_products !== null &&
       filtered_products !== undefined &&
-      filtered
+      filtered &&
+      eth_price !== null
     ) {
       filtered_products.map((product, index) => {
         return display.push(
           <div key={index}>
-            <ProductCard product={product} />
+            <ProductCard product={product} eth_price={eth_price} />
           </div>
         );
       });
@@ -124,12 +129,13 @@ const Shop = ({
       !filtered &&
       products &&
       products !== null &&
-      products !== undefined
+      products !== undefined &&
+      eth_price !== null
     ) {
       products.map((product, index) => {
         return display.push(
           <div key={index}>
-            <ProductCard product={product} />
+            <ProductCard product={product} eth_price={eth_price} />
           </div>
         );
       });
@@ -607,11 +613,13 @@ const Shop = ({
 const mapStateToProps = state => ({
   categories: state.Categories.categories,
   products: state.Products.products,
-  filtered_products: state.Products.filtered_products
+  filtered_products: state.Products.filtered_products,
+  eth_price: state.web3.eth_price,
 })
 
 export default connect(mapStateToProps, {
   get_categories,
   get_products,
-  get_filtered_products
+  get_filtered_products,
+  etherPrice
 })(Shop)

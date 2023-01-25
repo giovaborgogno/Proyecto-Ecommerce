@@ -10,24 +10,25 @@ import {
     update_item,
     remove_item,
 } from '../../redux/actions/cart'
-import {check_coupon} from '../../redux/actions/coupons'
-import {get_shipping_options} from '../../redux/actions/shipping'
-import {get_user_profile, update_user_profile} from '../../redux/actions/profile'
+import { check_coupon } from '../../redux/actions/coupons'
+import { get_shipping_options } from '../../redux/actions/shipping'
+import { get_user_profile, update_user_profile } from '../../redux/actions/profile'
 import CartItem from "../../components/cart/CartItem";
 import { Link } from "react-router-dom";
 import { setAlert } from "../../redux/actions/alert";
 import ShippingForm from '../../components/checkout/ShippingForm';
 
-  import {
+import {
     get_payment_total,
     get_client_token,
     process_payment
-  } from '../../redux/actions/payment';
-  
-  import DropIn from 'braintree-web-drop-in-react';
-  import { Oval } from 'react-loader-spinner'
-  import {countries} from '../../helpers/fixedCountries'
-  
+} from '../../redux/actions/payment';
+
+import DropIn from 'braintree-web-drop-in-react';
+import { Oval } from 'react-loader-spinner'
+import { countries } from '../../helpers/fixedCountries'
+import { makePayment, process_order_crypto } from '../../redux/actions/web3';
+
 
 const Checkout = ({
     isAuthenticated,
@@ -58,8 +59,15 @@ const Checkout = ({
     total_after_coupon,
     update_user_profile,
     get_user_profile,
-    profile
+    profile,
+    eth_price,
+    process_order_crypto,
+    makePayment,
+    hash,
+    made_payment_crypto
 }) => {
+
+    const [payWithEth, setPayWithEth] = useState(false)
 
     const [formData, setFormData] = useState({
         full_name: '',
@@ -95,86 +103,124 @@ const Checkout = ({
 
     const buy = async e => {
         e.preventDefault();
-        let nonce = await data.instance.requestPaymentMethod();
-        if (coupon && coupon !== null && coupon !== undefined) {
-          process_payment(
-              nonce,
-              shipping_id,
-              coupon.name,
-              full_name,
-              address_line_1,
-              address_line_2,
-              city,
-              state_province_region,
-              postal_zip_code,
-              country_region,
-              telephone_number
-          );
-          update_user_profile(
-            address_line_1,
-            address_line_2,
-            city,
-            state_province_region,
-            postal_zip_code,
-            telephone_number,
-            country_region
-          )
+        if (payWithEth) {
+            if (coupon && coupon !== null && coupon !== undefined) {
+                await makePayment((total_amount / eth_price).toFixed(4))
+                let newHash = localStorage.getItem("hash");
+                process_order_crypto(
+                    total_amount,
+                    shipping_id,
+                    coupon.name,
+                    full_name,
+                    address_line_1,
+                    address_line_2,
+                    city,
+                    state_province_region,
+                    postal_zip_code,
+                    country_region,
+                    telephone_number,
+                    newHash
+                );
+                                
+                
+            } else {
 
-        } else {
-          process_payment(
-              nonce,
-              shipping_id,
-              '',
-              full_name,
-              address_line_1,
-              address_line_2,
-              city,
-              state_province_region,
-              postal_zip_code,
-              country_region,
-              telephone_number
-          );
-          update_user_profile(
-            address_line_1,
-            address_line_2,
-            city,
-            state_province_region,
-            postal_zip_code,
-            telephone_number,
-            country_region
-          )
-      }
+                await makePayment((total_amount / eth_price).toFixed(4))
+                let newHash = localStorage.getItem("hash");
+                process_order_crypto(
+                    total_amount,
+                    shipping_id,
+                    '',
+                    full_name,
+                    address_line_1,
+                    address_line_2,
+                    city,
+                    state_province_region,
+                    postal_zip_code,
+                    country_region,
+                    telephone_number,
+                    newHash
+                );
+
+            }
+        }
+        else {
+            let nonce = await data.instance.requestPaymentMethod();
+            if (coupon && coupon !== null && coupon !== undefined) {
+
+                process_payment(
+                    nonce,
+                    shipping_id,
+                    coupon.name,
+                    full_name,
+                    address_line_1,
+                    address_line_2,
+                    city,
+                    state_province_region,
+                    postal_zip_code,
+                    country_region,
+                    telephone_number
+                );
+
+            } else {
+                process_payment(
+                    nonce,
+                    shipping_id,
+                    '',
+                    full_name,
+                    address_line_1,
+                    address_line_2,
+                    city,
+                    state_province_region,
+                    postal_zip_code,
+                    country_region,
+                    telephone_number,
+                );
+
+
+            }
+            update_user_profile(
+                address_line_1,
+                address_line_2,
+                city,
+                state_province_region,
+                postal_zip_code,
+                telephone_number,
+                country_region
+            )
+        }
     }
+
 
     const apply_coupon = async e => {
         e.preventDefault();
-  
+
         check_coupon(coupon_name);
-      };
+    };
 
     const [render, setRender] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0)
         get_shipping_options();
-        if(isAuthenticated !== null && isAuthenticated !== undefined && isAuthenticated){
+        if (isAuthenticated !== null && isAuthenticated !== undefined && isAuthenticated) {
             get_client_token();
             get_user_profile();
-            
+
         }
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         get_items()
         get_total()
         get_item_total()
-    },[])
-    
+    }, [])
+
     useEffect(() => {
-      if (shipping_id && shipping_id !== null && shipping_id !== undefined && coupon)
-          get_payment_total(shipping_id, coupon.name);
-      else
-          get_payment_total(shipping_id,'');
+        if (shipping_id && shipping_id !== null && shipping_id !== undefined && coupon)
+            get_payment_total(shipping_id, coupon.name);
+        else
+            get_payment_total(shipping_id, '');
     }, [shipping_id, items, coupon]);
 
     if (isAuthenticated !== null && isAuthenticated !== undefined && !isAuthenticated)
@@ -236,63 +282,77 @@ const Checkout = ({
 
     const renderPaymentInfo = () => {
         if (!clientToken) {
-          if (!isAuthenticated) {
-              <Link
-                to="/login"
-                className="w-full bg-gray-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
-              >
-                Login
-              </Link>
-          } else {
-            <button
-              className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-            >
-              <Oval
-                    type="Oval"
-                    color="#fff"
-                    width={20}
-                    height={20}
-              />
-            </button>
-          }
-        } else {
-          return (
-            <>
-              <DropIn
-                options={{
-                    authorization: clientToken,
-                    paypal: {
-                        flow: 'vault'
-                    }
-                }}
-                onInstance={instance => (data.instance = instance)}
-              />
-              <div className="mt-6">
-                {loading?<button
-                  className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+            if (!isAuthenticated) {
+                <Link
+                    to="/login"
+                    className="w-full bg-gray-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
                 >
-                  <Oval
+                    Login
+                </Link>
+            } else {
+                <button
+                    className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+                >
+                    <Oval
                         type="Oval"
                         color="#fff"
                         width={20}
                         height={20}
-                  />
-                </button>:
-                <button
-                type="submit"
-                className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
-              >
-                Place Order
-              </button>}
-              </div>
-            </>
-          )
-        }
-      }
-  
-      if (made_payment)
-          return <Navigate to='/thankyou' />;
+                    />
+                </button>
+            }
+        } else {
+            return (
+                <>
+                    <DropIn
+                        options={{
+                            authorization: clientToken,
+                            paypal: {
+                                flow: 'vault'
+                            }
+                        }}
+                        onInstance={instance => (data.instance = instance)}
+                    />
 
+                    <div className="mt-6">
+                        {loading ? <button
+                            className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+                        >
+                            <Oval
+                                type="Oval"
+                                color="#fff"
+                                width={20}
+                                height={20}
+                            />
+                        </button> :
+                        <>
+                        <button
+                                type="submit"
+                                className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+                            >
+                                Place Order
+                            </button>
+                            <button
+                                onClick={() => setPayWithEth(true)}
+                                type="submit"
+                                className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+                            >
+                                or Pay With Crypto
+                            </button>
+                        </>
+                            
+                            }
+                    </div>
+                </>
+            )
+        }
+    }
+
+    if (made_payment)
+        return <Navigate to='/thankyou' />;
+
+    if (made_payment_crypto && hash!==null )
+    return <Navigate to='/thankyou' />;
     return (
         <Layout>
             <div className="bg-white">
@@ -336,6 +396,7 @@ const Checkout = ({
                             apply_coupon={apply_coupon}
                             coupon_name={coupon_name}
                             profile={profile}
+                            eth_price={eth_price}
                         />
                     </div>
 
@@ -362,8 +423,12 @@ const mapStateToProps = state => ({
     estimated_tax: state.Payment.estimated_tax,
     shipping_cost: state.Payment.shipping_cost,
     coupon: state.Coupons.coupon,
-    profile: state.Profile.profile
+    profile: state.Profile.profile,
+    eth_price: state.web3.eth_price,
+    hash: state.web3.hash,
+    made_payment_crypto: state.web3.made_payment
 })
+
 export default connect(mapStateToProps, {
 
     update_item,
@@ -379,4 +444,6 @@ export default connect(mapStateToProps, {
     check_coupon,
     update_user_profile,
     get_user_profile,
+    process_order_crypto,
+    makePayment
 })(Checkout);

@@ -10,6 +10,7 @@ const ThankYou = ({
 
     useEffect(() => {
         reset()
+        localStorage.removeItem("hash")
     }, [])
 
     if (isAuthenticated !== null && isAuthenticated !== undefined && !isAuthenticated)

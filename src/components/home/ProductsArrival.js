@@ -18,7 +18,7 @@ import { Link } from "react-router-dom"
 */
   
   export default function ProductsArrival({
-    data
+    data, eth_price
   }) {
     return (
       <div className="bg-white">
@@ -45,7 +45,7 @@ import { Link } from "react-router-dom"
                     </h3>
                     
                   </div>
-                  <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                  <p className="text-sm font-medium text-gray-900">${product.price} or {(product.price / eth_price).toFixed(4)} ETH</p>
                 </div>
               </div>
             ))}

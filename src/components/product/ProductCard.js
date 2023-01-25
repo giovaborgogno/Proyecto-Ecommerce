@@ -1,7 +1,19 @@
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom"
-const ProductCard =({product})=>{
+
+export default function ProductCard({product, eth_price}){
+
+  function usdToEther(product_price, eth_price) {
+
+    // Convertir el valor en USD a Ethereum
+    const etherAmount = product_price / Number(eth_price);
+
+    return etherAmount.toFixed(4)
+
+}
+
     return(
-        
             <div key={product.id} className="group relative mx-2">
               <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
                 <img
@@ -19,10 +31,17 @@ const ProductCard =({product})=>{
                     </Link>
                   </h3>
                 </div>
+                {eth_price!==null?
+                <p className="text-sm font-medium text-gray-900">${product.price} or {usdToEther(product.price, eth_price).toString()} ETH</p>
+                :
                 <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                }
+                {/* <p className="text-sm font-medium text-gray-900">${product.price} or {(product.price / Number(eth_price)).toFixed(4).toString()} ETH</p> */}
+                
               </div>
             </div>
     )
+
+
 }
 
-export default ProductCard
