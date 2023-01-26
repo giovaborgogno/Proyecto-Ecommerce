@@ -17,6 +17,31 @@ import Footer from '../components/navigation/footer';
 
 const Layout = (props) => {
 
+    if (window.ethereum) {
+        window.ethereum.on("chainChanged", handleChainChanged);
+        function handleChainChanged(_chainId) {
+            // We recommend reloading the page, unless you must do otherwise
+            window.location.reload();
+        }
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (localStorage.getItem("account")) {
+                props.loadWeb3();
+                // my_user ? <></>:get_my_user_details()
+            }
+            
+
+        };
+        fetchData();
+
+        if (window.ethereum) {
+            props.get_network_id();
+        }
+      
+    }, []);
+
     const auth = async () => {
         await props.check_authenticated()
         await props.load_user()
@@ -30,28 +55,7 @@ const Layout = (props) => {
         auth();
     }, []);
 
-    if (window.ethereum) {
-        window.ethereum.on("chainChanged", handleChainChanged);
-        function handleChainChanged(_chainId) {
-            // We recommend reloading the page, unless you must do otherwise
-            window.location.reload();
-        }
-    }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (localStorage.getItem("account")) {
-                loadWeb3();
-                // my_user ? <></>:get_my_user_details()
-            }
-
-        };
-        fetchData();
-
-        if (window.ethereum) {
-            get_network_id();
-        }
-    }, []);
+    
 
     return (
         <div>
