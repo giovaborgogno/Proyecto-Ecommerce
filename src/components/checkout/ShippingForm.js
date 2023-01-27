@@ -34,8 +34,7 @@ const ShippingForm = ({
 
     return (
 
-        {
-            ...user !== null && user !== undefined && user && profile &&
+            
             <>
                 <section
                     aria-labelledby="summary-heading"
@@ -336,7 +335,6 @@ const ShippingForm = ({
                     </form>
                 </section>
             </>
-        }
 
 
     )

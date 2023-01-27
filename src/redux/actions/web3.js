@@ -148,7 +148,7 @@ export const makePayment = (amount) => async (dispatch) => {
             let transaction = await signer.sendTransaction(tx);
             console.log(`Transacción enviada: ${transaction.hash}`);
 
-            if(transaction.hash !== null){
+            if (transaction.hash !== null) {
                 localStorage.setItem("hash", transaction.hash.toString());
                 dispatch({
                     type: ETH_PAYMENT_SUCCESS,
@@ -161,7 +161,7 @@ export const makePayment = (amount) => async (dispatch) => {
                     type: ETH_PAYMENT_FAIL,
                 });
             }
-            
+
         } catch (error) {
             dispatch({
                 type: ETH_PAYMENT_FAIL,
@@ -182,10 +182,10 @@ export const makePayment = (amount) => async (dispatch) => {
 export const etherPrice = () => async (dispatch) => {
     try {
         const response = await axios.get('https://api.coingecko.com/api/v3/simple/price', {
-        params: {
-            ids: 'ethereum',
-            vs_currencies: 'usd'
-        }
+            params: {
+                ids: 'ethereum',
+                vs_currencies: 'usd'
+            }
         });
         const ethPrice = response.data.ethereum.usd;
 
@@ -198,7 +198,7 @@ export const etherPrice = () => async (dispatch) => {
             type: SET_ETH_PRICE_FAIL,
         })
     }
-    
+
 }
 
 export const process_order_crypto = (
@@ -212,7 +212,7 @@ export const process_order_crypto = (
     state_province_region,
     postal_zip_code,
     country_region,
-    telephone_number, 
+    telephone_number,
     transaction_id
 ) => async dispatch => {
 
@@ -244,8 +244,6 @@ export const process_order_crypto = (
         type: SET_PAYMENT_LOADING
     });
 
-    
-
     try {
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/orders/create-order`, body, config);
         if (res.status === 200) {
@@ -260,7 +258,7 @@ export const process_order_crypto = (
             });
             dispatch(setAlert('Error creating order', 'red'));
         }
-    } catch(err) {
+    } catch (err) {
         dispatch({
             type: CREATE_ORDER_FAIL
         });

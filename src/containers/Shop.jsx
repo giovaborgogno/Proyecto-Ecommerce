@@ -115,8 +115,7 @@ const Shop = ({
       filtered_products &&
       filtered_products !== null &&
       filtered_products !== undefined &&
-      filtered &&
-      eth_price !== null
+      filtered
     ) {
       filtered_products.map((product, index) => {
         return display.push(
@@ -129,8 +128,7 @@ const Shop = ({
       !filtered &&
       products &&
       products !== null &&
-      products !== undefined &&
-      eth_price !== null
+      products !== undefined
     ) {
       products.map((product, index) => {
         return display.push(

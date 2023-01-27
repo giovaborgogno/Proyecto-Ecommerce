@@ -7,6 +7,9 @@ function Alert({ alert }) {
     const displayAlert = () => {
         if (alert !== null) {
             return(
+                <>
+                {alert.alertType !== null && alert.alertType !== undefined && alert.alertType && 
+                
                 <div className={`rounded-md bg-${alert.alertType}-50 p-4`}>
                     <div className="flex">
                         <div className="flex-shrink-0">
@@ -18,6 +21,10 @@ function Alert({ alert }) {
                     
                     </div>
                 </div>
+                
+                }
+                
+                </>
             )
         } else {
             <Fragment></Fragment>

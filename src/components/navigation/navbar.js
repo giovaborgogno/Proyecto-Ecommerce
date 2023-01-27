@@ -151,6 +151,7 @@ function Navbar({
 
   }
   const authLinks = (
+
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex justify-center w-full rounded-full  text-sm font-medium text-gray-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
@@ -231,6 +232,11 @@ function Navbar({
         </Menu.Items>
       </Transition>
     </Menu>
+
+
+
+
+
   )
 
   const guestLinks = (
@@ -262,7 +268,7 @@ function Navbar({
       >
         <Popover.Panel className="absolute left-1/2 z-50 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 2xl:max-w-md">
           <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-            
+
             <div className="bg-gray-50 dark:bg-dark-second p-4">
               <div
                 onClick={() => {
@@ -292,128 +298,128 @@ function Navbar({
 
   const walletConnected = (
     <Fragment>
-      
+
       <Popover
-      as="div"
-      className="inline-flex relative rounded-xl ml-2 py-0.5 pl-4 bg-gray-50 dark:bg-black border dark:border-dark-third
-      sm:hidden"
-     >
-      {ethereum_balance && (
-            <p className="cursor-default inline-flex mt-1.5 mr-2 text-md font-gilroy-semibold text-gray-700 dark:text-white">
-              {ethereum_balance.length > 8
-                ? ethereum_balance.slice(0, 7)
-                : ethereum_balance}{" "}
-              ETH
-            </p>
-          )}
-          {network === 1 ? (
-            <>
-          <Popover className="relative">
-                {({ open }) => (
-                  <>
-                    <Popover.Button
-                      onMouseDown={() =>
-                        setEffectLogin(true)
-                      }
-                      onMouseUp={() =>
-                        setEffectLogin(false)
-                      }
-                      className={`
+        as="div"
+        className="inline-flex relative rounded-xl ml-2 py-0.5 pl-4 bg-gray-50 dark:bg-black border dark:border-dark-third
+      lg:hidden"
+      >
+        {ethereum_balance && (
+          <p className="cursor-default inline-flex mt-1.5 mr-2 text-md font-gilroy-semibold text-gray-700 dark:text-white">
+            {ethereum_balance.length > 8
+              ? ethereum_balance.slice(0, 7)
+              : ethereum_balance}{" "}
+            ETH
+          </p>
+        )}
+        {network === 1 ? (
+          <>
+            <Popover className="relative">
+              {({ open }) => (
+                <>
+                  <Popover.Button
+                    onMouseDown={() =>
+                      setEffectLogin(true)
+                    }
+                    onMouseUp={() =>
+                      setEffectLogin(false)
+                    }
+                    className={`
                       
                           pr-4
                           ${open ? "" : "text-opacity-90"}
                           group inline-flex items-center ${effectLogin && "animate-click"
-                        } rounded-xl mx-1 py-1 pl-4 inline-flex items-center px- border border-transparent text-sm leading-4 font-gilroy-semibold text-black dark:text-dark-txt dark:bg-dark-third bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300`}
-                    >
-                      {account ? (
-                        <>
-                          {account.slice(0, 3)}...
-                          {account.slice(-3)}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      
-                    </Popover.Button>
-                    {popoverTransition()}
-                    </>
-                )}
-                </Popover>
-                </>
-                )
-                :
-                (
-                  <Popover className="relative">
-                    {({ open }) => (
+                      } rounded-xl mx-1 py-1 pl-4 inline-flex items-center px- border border-transparent text-sm leading-4 font-gilroy-semibold text-black dark:text-dark-txt dark:bg-dark-third bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300`}
+                  >
+                    {account ? (
                       <>
-                        <Popover.Button
-                          className={`
+                        {account.slice(0, 3)}...
+                        {account.slice(-3)}
+                      </>
+                    ) : (
+                      <></>
+                    )}
+
+                  </Popover.Button>
+                  {popoverTransition()}
+                </>
+              )}
+            </Popover>
+          </>
+        )
+          :
+          (
+            <Popover className="relative">
+              {({ open }) => (
+                <>
+                  <Popover.Button
+                    className={`
                                               ${open ? "" : "text-opacity-90"}
                                               group inline-flex items-center rounded-xl mr-0.5 bg-rose-200 hover:bg-rose-300 px-3 py-2 text-sm font-gilroy-semibold text-rose-700 hover:text-rose-800 hover:text-opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
-                        >
-                          <span>Error</span>
-                          <ChevronDownIcon
-                            className={`${open ? "" : "text-opacity-70"
-                              }
+                  >
+                    <span>Error</span>
+                    <ChevronDownIcon
+                      className={`${open ? "" : "text-opacity-70"
+                        }
                                                   ml-2 h-5 w-5 text-rose-400 hover:text-rose-500 transition duration-150 ease-in-out group-hover:text-opacity-80`}
-                            aria-hidden="true"
-                          />
-                        </Popover.Button>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-200"
-                          enterFrom="opacity-0 translate-y-1"
-                          enterTo="opacity-100 translate-y-0"
-                          leave="transition ease-in duration-150"
-                          leaveFrom="opacity-100 translate-y-0"
-                          leaveTo="opacity-0 translate-y-1"
-                        >
-                          <Popover.Panel className="absolute left-2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0">
-                            <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                              <div className="relative grid gap-8 dark:bg-dark-third bg-white p-7">
-                                You need to change network:
-                                <button
-                                  onClick={async () => {
-                                    await window.ethereum.request(
-                                      {
-                                        method: "wallet_switchEthereumChain",
-                                        params: [
-                                          {
-                                            chainId:
-                                              "0x1",
-                                          },
-                                        ], // chainId must be in hexadecimal numbers
-                                      }
-                                    );
-                                  }}
-                                  className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out dark:bg-dark-third bg-gray-50 dark:hover:bg-dark-main hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-rose-500 focus-visible:ring-opacity-50"
-                                >
-                                  <div className="flex h-10 w-10 shrink-0 items-center justify-center text-gray-300 sm:h-12 sm:w-12">
-                                    <img
-                                      className="h-8 w-8 inline-flex mr-1"
-                                      src="https://bafybeibwzivmmcrtqb3ofqzagnal2xp7efe5uwqxvxtphf2fr4u7xbtecy.ipfs.dweb.link/ethereum.png"
-                                    />
-                                  </div>
-                                  <div className="ml-4">
-                                    <p className="text-sm font-gilroy-medium dark:text-white text-gray-900">
-                                      Ethereum
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                      mainnet
-                                    </p>
-                                  </div>
-                                </button>
-                              </div>
+                      aria-hidden="true"
+                    />
+                  </Popover.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-200"
+                    enterFrom="opacity-0 translate-y-1"
+                    enterTo="opacity-100 translate-y-0"
+                    leave="transition ease-in duration-150"
+                    leaveFrom="opacity-100 translate-y-0"
+                    leaveTo="opacity-0 translate-y-1"
+                  >
+                    <Popover.Panel className="absolute left-2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0">
+                      <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+                        <div className="relative grid gap-8 dark:bg-dark-third bg-white p-7">
+                          You need to change network:
+                          <button
+                            onClick={async () => {
+                              await window.ethereum.request(
+                                {
+                                  method: "wallet_switchEthereumChain",
+                                  params: [
+                                    {
+                                      chainId:
+                                        "0x1",
+                                    },
+                                  ], // chainId must be in hexadecimal numbers
+                                }
+                              );
+                            }}
+                            className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out dark:bg-dark-third bg-gray-50 dark:hover:bg-dark-main hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-rose-500 focus-visible:ring-opacity-50"
+                          >
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center text-gray-300 sm:h-12 sm:w-12">
+                              <img
+                                className="h-8 w-8 inline-flex mr-1"
+                                src="https://bafybeibwzivmmcrtqb3ofqzagnal2xp7efe5uwqxvxtphf2fr4u7xbtecy.ipfs.dweb.link/ethereum.png"
+                              />
                             </div>
-                          </Popover.Panel>
-                        </Transition>
-                      </>
-                    )}
-                  </Popover>
-                )}
+                            <div className="ml-4">
+                              <p className="text-sm font-gilroy-medium dark:text-white text-gray-900">
+                                Ethereum
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                mainnet
+                              </p>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </Popover.Panel>
+                  </Transition>
+                </>
+              )}
+            </Popover>
+          )}
       </Popover>
-      
-        <div className="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
+
+      <div className="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
         <Popover
           as="div"
           className="lg:inline-flex relative hidden rounded-xl ml-2 py-0.5 pl-4 bg-gray-50 dark:bg-black border dark:border-dark-third"
@@ -453,7 +459,7 @@ function Navbar({
                       ) : (
                         <></>
                       )}
-                      
+
                     </Popover.Button>
                     {popoverTransition()}
                   </>
@@ -537,9 +543,12 @@ function Navbar({
     <Fragment>
       <NavLink
         to="/connect"
-        className="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-gilroy-medium rounded-md shadow-button text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+
       >
-        Acceder
+        <button className="ml-6 inline-flex items-center px-4 py-2  text-sm font-gilroy-medium rounded-md shadow-button  text-black bg-white hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow shadow-gray-200">
+          Connect MetaMask
+
+        </button>
       </NavLink>
     </Fragment>
   )
@@ -633,7 +642,8 @@ function Navbar({
 
 
         </Menu>
-
+        
+      
 
         {/* <div className="bg-white shadow">
           <button
@@ -730,6 +740,13 @@ function Navbar({
             </div>
 
             <div className="-mr-2 -my-2 md:hidden flex">
+            {isAuthenticated ?
+                <div className="flex items-center justify-end xl:col-span-4 ">
+
+                {account ? walletConnected : connectWallet}
+              </div>
+              : <></>
+                }
               <Link to='/cart' className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <ShoppingCartIcon className="h-6 w-6 hover:text-gray-900" aria-hidden="true" />
               </Link>
@@ -741,14 +758,11 @@ function Navbar({
               <div>
 
                 {
-                  isAuthenticated ? dashboardLinks() : <></>
+                  isAuthenticated ? dashboardLinks() : guestLinks
                 }
               </div>
-              <div className=" flex items-center justify-end ">
 
-                {/* <DarkModeSwitch /> */}
-                {account ? walletConnected : connectWallet}
-              </div>
+
             </div>
 
             <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
@@ -771,6 +785,13 @@ function Navbar({
 
               </Popover.Group>
               <div className="flex items-center md:ml-12">
+                {isAuthenticated ?
+                <div className="flex items-center justify-end xl:col-span-4 mr-4">
+
+                {account ? walletConnected : connectWallet}
+              </div>
+              : <></>
+                }
                 <Link to="/cart" >
                   <ShoppingCartIcon className="h-8 w-8 mr-3 text-gray-300 hover:text-gray-900" />
                   <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">{total_items}</span>
@@ -778,11 +799,8 @@ function Navbar({
                 {
                   isAuthenticated ? authLinks : guestLinks
                 }
+                
 
-                <div className="flex items-center justify-end xl:col-span-4">
-
-                  {account ? walletConnected : connectWallet}
-                </div>
               </div>
 
             </div>
@@ -907,7 +925,7 @@ function Navbar({
           </Popover.Panel>
         </Transition>
       </Popover>
-      <div className='sm:hidden'>
+      <div className='md:hidden'>
         <SearchBox
           search={search}
           onChange={onChange}

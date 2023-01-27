@@ -21,7 +21,8 @@ import ShippingForm from '../../components/checkout/ShippingForm';
 import {
     get_payment_total,
     get_client_token,
-    process_payment
+    process_payment,
+    reset
 } from '../../redux/actions/payment';
 
 import DropIn from 'braintree-web-drop-in-react';
@@ -64,7 +65,10 @@ const Checkout = ({
     process_order_crypto,
     makePayment,
     hash,
-    made_payment_crypto
+    made_payment_crypto,
+    account,
+    network,
+    reset
 }) => {
 
     const [payWithEth, setPayWithEth] = useState(false)
@@ -121,8 +125,8 @@ const Checkout = ({
                     telephone_number,
                     newHash
                 );
-                                
-                
+
+
             } else {
 
                 await makePayment((total_amount / eth_price).toFixed(4))
@@ -200,15 +204,22 @@ const Checkout = ({
 
     const [render, setRender] = useState(false)
 
+    const token = async () => {
+        await reset()
+        await get_client_token();
+    }
     useEffect(() => {
         window.scrollTo(0, 0)
         get_shipping_options();
         if (isAuthenticated !== null && isAuthenticated !== undefined && isAuthenticated) {
-            get_client_token();
+            token();
             get_user_profile();
 
         }
     }, [])
+    useEffect(()=>{
+        token()
+    },[isAuthenticated])
 
     useEffect(() => {
         get_items()
@@ -281,27 +292,7 @@ const Checkout = ({
     };
 
     const renderPaymentInfo = () => {
-        if (!clientToken) {
-            if (!isAuthenticated) {
-                <Link
-                    to="/login"
-                    className="w-full bg-gray-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
-                >
-                    Login
-                </Link>
-            } else {
-                <button
-                    className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-                >
-                    <Oval
-                        type="Oval"
-                        color="#fff"
-                        width={20}
-                        height={20}
-                    />
-                </button>
-            }
-        } else {
+        if (clientToken !== null && clientToken !== undefined) {
             return (
                 <>
                     <DropIn
@@ -325,37 +316,104 @@ const Checkout = ({
                                 height={20}
                             />
                         </button> :
-                        <>
-                        <button
-                                type="submit"
-                                className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
-                            >
-                                Place Order
-                            </button>
-                            <div className='text-center'>
-                                Or
-                            </div>
-                            <button
-                                onClick={() => setPayWithEth(true)}
-                                type="submit"
-                                className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
-                            >
-                                Pay With Crypto
-                            </button>
-                        </>
-                            
-                            }
+                            <>
+                                <button
+                                    type="submit"
+                                    className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+                                >
+                                    Place Order
+                                </button>
+                                <div className='text-center'>
+                                    Or
+                                </div>
+                                {account !== null ?
+                                    <>
+                                        {network !== 1 && network.toString() !== process.env.REACT_APP_ETH_NETWORK.toString()  ?
+                                            <>
+                                                Pay with Crypto
+                                                <button
+                                                    onClick={async () => {
+                                                        await window.ethereum.request(
+                                                            {
+                                                                method: "wallet_switchEthereumChain",
+                                                                params: [
+                                                                    {
+                                                                        chainId:
+                                                                            "0x1",
+                                                                    },
+                                                                ], // chainId must be in hexadecimal numbers
+                                                            }
+                                                        );
+                                                    }}
+                                                    className="w-full bg-red-200 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-red-800 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+                                                >
+
+                                                    Change Network to Mainnet
+                                                </button>
+                                            </>
+                                            :
+                                            <button
+                                                onClick={() => setPayWithEth(true)}
+                                                type="submit"
+                                                className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+                                            >
+                                                Pay With Crypto
+                                            </button>
+
+
+                                        }
+                                    </>
+                                    :
+                                    <>
+                                        Pay with Crypto
+                                        <Link to='/connect'>
+                                            <button
+                                                className="w-full bg-red-200 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-red-800 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+                                            >
+                                                Connect Metamask
+                                            </button>
+                                        </Link>
+                                    </>
+                                }
+
+
+                            </>
+
+                        }
                     </div>
                 </>
             )
+
+        } else {
+            if (!isAuthenticated) {
+                <Link
+                    to="/login"
+                    className="w-full bg-gray-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
+                >
+                    Login
+                </Link>
+            } else {
+                <button
+                    className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+                >
+                    <Oval
+                        type="Oval"
+                        color="#fff"
+                        width={20}
+                        height={20}
+                    />
+                </button>
+            }
         }
+
     }
 
     if (made_payment)
         return <Navigate to='/thankyou' />;
 
-    if (made_payment_crypto && hash!==null )
-    return <Navigate to='/thankyou' />;
+    if (made_payment_crypto && hash !== null)
+        return <Navigate to='/thankyou' />;
+
     return (
         <Layout>
             <div className="bg-white">
@@ -373,34 +431,40 @@ const Checkout = ({
                         </section>
 
                         {/* Order summary */}
-                        <ShippingForm
-                            original_price={original_price}
-                            full_name={full_name}
-                            address_line_1={address_line_1}
-                            address_line_2={address_line_2}
-                            city={city}
-                            state_province_region={state_province_region}
-                            postal_zip_code={postal_zip_code}
-                            telephone_number={telephone_number}
-                            countries={countries}
-                            onChange={onChange}
-                            buy={buy}
-                            user={user}
-                            renderShipping={renderShipping}
-                            total_amount={total_amount}
-                            total_after_coupon={total_after_coupon}
-                            total_compare_amount={total_compare_amount}
-                            estimated_tax={estimated_tax}
-                            shipping_cost={shipping_cost}
-                            shipping_id={shipping_id}
-                            shipping={shipping}
-                            renderPaymentInfo={renderPaymentInfo}
-                            coupon={coupon}
-                            apply_coupon={apply_coupon}
-                            coupon_name={coupon_name}
-                            profile={profile}
-                            eth_price={eth_price}
-                        />
+                        {user && isAuthenticated !== null && isAuthenticated &&
+                            <ShippingForm
+                                original_price={original_price}
+                                full_name={full_name}
+                                address_line_1={address_line_1}
+                                address_line_2={address_line_2}
+                                city={city}
+                                state_province_region={state_province_region}
+                                postal_zip_code={postal_zip_code}
+                                telephone_number={telephone_number}
+                                countries={countries}
+                                onChange={onChange}
+                                buy={buy}
+                                user={user}
+                                renderShipping={renderShipping}
+                                total_amount={total_amount}
+                                total_after_coupon={total_after_coupon}
+                                total_compare_amount={total_compare_amount}
+                                estimated_tax={estimated_tax}
+                                shipping_cost={shipping_cost}
+                                shipping_id={shipping_id}
+                                shipping={shipping}
+                                renderPaymentInfo={renderPaymentInfo}
+                                coupon={coupon}
+                                apply_coupon={apply_coupon}
+                                coupon_name={coupon_name}
+                                profile={profile}
+                                eth_price={eth_price}
+                            />
+                        }
+
+
+
+
                     </div>
 
                     {/* {showWishlistItems()} */}
@@ -429,7 +493,9 @@ const mapStateToProps = state => ({
     profile: state.Profile.profile,
     eth_price: state.web3.eth_price,
     hash: state.web3.hash,
-    made_payment_crypto: state.web3.made_payment
+    made_payment_crypto: state.web3.made_payment,
+    account: state.web3.account,
+    network: state.web3.network
 })
 
 export default connect(mapStateToProps, {
@@ -448,5 +514,6 @@ export default connect(mapStateToProps, {
     update_user_profile,
     get_user_profile,
     process_order_crypto,
-    makePayment
+    makePayment,
+    reset
 })(Checkout);
