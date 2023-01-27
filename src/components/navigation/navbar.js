@@ -732,7 +732,7 @@ function Navbar({
                 <img
                   className="h-8 w-auto sm:h-10"
                   // src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                  src="g-logo.svg"
+                  src="/g-logo.svg"
                   alt=""
                 />
               </Link>
@@ -827,7 +827,7 @@ function Navbar({
                     <img
                       className="h-8 w-auto"
                       // src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                      src="g-logo.svg"
+                      src="/g-logo.svg"
                       alt="Giovanni Ecommerce"
                     />
 
