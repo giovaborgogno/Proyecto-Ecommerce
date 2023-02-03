@@ -146,9 +146,13 @@ export const makePayment = (amount) => async (dispatch) => {
         try {
             // Enviar la transacción 
             let transaction = await signer.sendTransaction(tx);
+            // const receipt = await transaction.wait()
             console.log(`Transacción enviada: ${transaction.hash}`);
+            // console.log(`Transacción confirmada: ${receipt.transactionHash}`);
 
+            // if (receipt.transactionHash !== null) {
             if (transaction.hash !== null) {
+                // localStorage.setItem("hash", receipt.transactionHash.toString());
                 localStorage.setItem("hash", transaction.hash.toString());
                 dispatch({
                     type: ETH_PAYMENT_SUCCESS,
@@ -213,7 +217,8 @@ export const process_order_crypto = (
     postal_zip_code,
     country_region,
     telephone_number,
-    transaction_id
+    transaction_id,
+    etherAmount
 ) => async dispatch => {
 
 
@@ -239,30 +244,42 @@ export const process_order_crypto = (
         telephone_number,
         transaction_id
     });
+    const value = ethers.utils.parseEther(etherAmount.toString())
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const transaction = await provider.getTransaction(transaction_id)
 
     dispatch({
         type: SET_PAYMENT_LOADING
     });
 
-    try {
-        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/orders/create-order`, body, config);
-        if (res.status === 200) {
-            dispatch({
-                type: CREATE_ORDER_SUCCESS
-            });
-            dispatch(setAlert('Created order', 'green'));
-            dispatch(get_item_total());
-        } else {
-            dispatch({
-                type: CREATE_ORDER_FAIL
-            });
-            dispatch(setAlert('Error creating order', 'red'));
-        }
-    } catch (err) {
+    if (transaction.value.toString() !== value.toString() || transaction.to.toString() !== process.env.REACT_APP_MYWALLET.toString()) {
         dispatch({
             type: CREATE_ORDER_FAIL
         });
         dispatch(setAlert('Error processing payment', 'red'));
+    }
+    else {
+
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/orders/create-order`, body, config);
+            if (res.status === 200) {
+                dispatch({
+                    type: CREATE_ORDER_SUCCESS
+                });
+                dispatch(setAlert('Created order', 'green'));
+                dispatch(get_item_total());
+            } else {
+                dispatch({
+                    type: CREATE_ORDER_FAIL
+                });
+                dispatch(setAlert('Error creating order', 'red'));
+            }
+        } catch (err) {
+            dispatch({
+                type: CREATE_ORDER_FAIL
+            });
+            dispatch(setAlert('Error processing payment', 'red'));
+        }
     }
 
     dispatch({

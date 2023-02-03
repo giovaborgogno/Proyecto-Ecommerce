@@ -147,6 +147,7 @@ function Navbar({
 
   const logoutHandler = () => {
     logout();
+    localStorage.removeItem("account");
     setRedirect(true);
 
   }

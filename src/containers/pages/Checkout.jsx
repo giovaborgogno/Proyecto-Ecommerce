@@ -109,8 +109,9 @@ const Checkout = ({
         e.preventDefault();
         if (payWithEth) {
             if (coupon && coupon !== null && coupon !== undefined) {
-                await makePayment((total_amount / eth_price).toFixed(4))
-                let newHash = localStorage.getItem("hash");
+                const ethAmount = (total_amount / eth_price).toFixed(4)
+                await makePayment(ethAmount)
+                const newHash = localStorage.getItem("hash");
                 process_order_crypto(
                     total_amount,
                     shipping_id,
@@ -123,13 +124,14 @@ const Checkout = ({
                     postal_zip_code,
                     country_region,
                     telephone_number,
-                    newHash
+                    newHash,
+                    ethAmount
                 );
 
 
             } else {
-
-                await makePayment((total_amount / eth_price).toFixed(4))
+                const ethAmount = (total_amount / eth_price).toFixed(4)
+                await makePayment(ethAmount)
                 let newHash = localStorage.getItem("hash");
                 process_order_crypto(
                     total_amount,
@@ -143,7 +145,8 @@ const Checkout = ({
                     postal_zip_code,
                     country_region,
                     telephone_number,
-                    newHash
+                    newHash,
+                    ethAmount
                 );
 
             }
