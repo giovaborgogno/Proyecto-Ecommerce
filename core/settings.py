@@ -31,12 +31,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-# DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
 DOMAIN = os.environ.get('DOMAIN')
 
-ALLOWED_HOSTS = ['*', '.vercel.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -259,7 +258,7 @@ AUTH_USER_MODEL = "user.UserAccount"
 EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 
 if not DEBUG:
-    DEFAULT_FROM_EMAIL = 'Giovanni - Software Developer <giovaborgogno@gmail.com>'
+    DEFAULT_FROM_EMAIL = 'Giovanni - Software Developer <giovaborgogno@itvirtuous.com>'
     EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = env('EMAIL_HOST')
     EMAIL_HOST_USER = env('EMAIL_HOST_USER')

@@ -318,7 +318,7 @@ class ProcessPaymentView(APIView):
                     + '\n\nYou can go on your user dashboard to check the status of your order.'
                     + '\n\nSincerely,'
                     + '\nShop Time',
-                    'giovanni@openm.us',
+                    'giovaborgogno@itvirtuous.com',
                     [user.email],
                     fail_silently=False
                 )

@@ -1,4 +1,4 @@
-#!/home/giova/Documentos/study/python/django-web/Proyecto-Ecommerce/venv/bin/python3
+#!/home/giova/Documentos/work/giovaborgogno.com/shop/Proyecto-Ecommerce/venv/bin/python
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 
