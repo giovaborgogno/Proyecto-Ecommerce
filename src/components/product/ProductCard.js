@@ -17,7 +17,7 @@ export default function ProductCard({product, eth_price}){
             <div key={product.id} className="group relative mx-2">
               <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
                 <img
-                  src={`${process.env.REACT_APP_API_URL}${product.photo}`}
+                  src={`${product.photo}`}
                   alt=""
                   className="w-full h-full object-center object-cover lg:w-full lg:h-full"
                 />

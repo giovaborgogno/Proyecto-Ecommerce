@@ -33,7 +33,7 @@ import { Link } from "react-router-dom"
               <div key={product.id} className="group relative">
                 <div className="w-full h-96 rounded-lg overflow-hidden group-hover:opacity-75 sm:h-auto sm:aspect-w-2 sm:aspect-h-3">
                   <img
-                    src={`${process.env.REACT_APP_API_URL}${product.photo}`}
+                    src={`${product.photo}`}
                     alt=""
                     className="w-full h-full object-center object-cover"
                   />
